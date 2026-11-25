@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
     iframe.name = frameName;
     iframe.title = 'Envío seguro del pedido';
     iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+    iframe.src = 'about:blank';
 
     const hiddenForm = document.createElement('form');
     hiddenForm.method = 'POST';
@@ -89,9 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
       iframe.remove();
     }, 20000);
 
-    iframe.addEventListener('load', () => {
-      // Ignorar la primera carga inicial del iframe.
-      if (finished || !hiddenForm.dataset.submitted) return;
+    const handleResponse = () => {
+      if (finished) return;
       finished = true;
       window.clearTimeout(timeout);
 
@@ -117,10 +116,16 @@ document.addEventListener('DOMContentLoaded', () => {
         hiddenForm.remove();
         iframe.remove();
       }, 1000);
-    });
+    };
 
-    document.body.appendChild(hiddenForm);
-    hiddenForm.dataset.submitted = 'true';
-    hiddenForm.submit();
+    // Esperar a que el iframe termine su carga inicial antes de enviar.
+    iframe.addEventListener('load', function sendAfterInitialLoad() {
+      iframe.removeEventListener('load', sendAfterInitialLoad);
+      iframe.addEventListener('load', handleResponse, { once: true });
+      document.body.appendChild(hiddenForm);
+      hiddenForm.submit();
+    }, { once: true });
+
+    document.body.appendChild(iframe);
   });
 });
