@@ -46,8 +46,8 @@ function head() {
 function foot() {
   $('#ft').innerHTML = `<div class="w">
     <div><img src="logo.png" alt="BBR"><p>Soluciones inteligentes. Una vida mejor.</p></div>
-    <div><b>Contacto</b><p>Bata, Guinea Ecuatorial<br>WhatsApp: pendiente de configurar</p></div>
-    <div><b>Información</b><p>Los pedidos se habilitarán cuando conectemos el sistema seguro de registro.</p></div>
+    <div><b>Ubicación</b><p>Malabo, Guinea Ecuatorial</p></div>
+    <div><b>Información</b><p>Realiza tu pedido online de forma sencilla y segura. BBR — Soluciones inteligentes. Una vida mejor.</p></div>
   </div>`;
 }
 function card(p) {
