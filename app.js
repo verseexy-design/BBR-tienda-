@@ -1,4 +1,4 @@
-/* BBR - Fase 2: tienda frontend. Los pedidos aún requieren conexión a un servidor/base de datos. */
+/* BBR - tienda y seguimiento anónimo de visitas */
 const PRODUCTS = [{
   id: 'desodorante-lanemay',
   nombre: 'Desodorante en barra Lanemay 40 g',
@@ -12,134 +12,75 @@ const PRODUCTS = [{
 const fmt = n => `${Math.round(Number(n) || 0).toLocaleString('es-ES')} FCFA`;
 const $ = s => document.querySelector(s);
 const getCart = () => {
-  try {
-    const data = JSON.parse(localStorage.getItem('bbr_cart') || '[]');
-    return Array.isArray(data) ? data.filter(x => prod(x.id) && Number.isInteger(x.q) && x.q > 0) : [];
-  } catch { return []; }
+  try { const data=JSON.parse(localStorage.getItem('bbr_cart')||'[]'); return Array.isArray(data)?data.filter(x=>prod(x.id)&&Number.isInteger(x.q)&&x.q>0):[]; }
+  catch { return []; }
 };
-const setCart = c => {
-  localStorage.setItem('bbr_cart', JSON.stringify(c));
-  head();
-};
-const prod = id => PRODUCTS.find(p => p.id === id);
-const count = () => getCart().reduce((a, i) => a + i.q, 0);
-const total = () => getCart().reduce((a, i) => a + (prod(i.id)?.precio || 0) * i.q, 0);
+const setCart = c => { localStorage.setItem('bbr_cart',JSON.stringify(c)); head(); };
+const prod = id => PRODUCTS.find(p=>p.id===id);
+const count = () => getCart().reduce((a,i)=>a+i.q,0);
+const total = () => getCart().reduce((a,i)=>a+(prod(i.id)?.precio||0)*i.q,0);
 
-function add(id, q) {
-  const p = prod(id);
-  if (!p || !p.stock) return;
-  const c = getCart();
-  const item = c.find(x => x.id === id);
-  if (item) item.q = Math.min(99, item.q + q);
-  else c.push({ id, q: Math.min(99, Math.max(1, q)) });
+function trackBBRVisit() {
+  try {
+    const endpoint='https://script.google.com/macros/s/AKfycbzB5B_RkVLstaF6SQ74WMmVae53P4TRMBO4xQ9oB3JIGYcxeHhRrD5Bqc1YK6l3I5fLfQ/exec';
+    let visitor=localStorage.getItem('bbr_visitor_id');
+    if(!visitor){visitor=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():'v-'+Date.now()+'-'+Math.random().toString(36).slice(2);localStorage.setItem('bbr_visitor_id',visitor);}
+    const page=document.body.dataset.page||'unknown';
+    const productId=page==='prod'?new URLSearchParams(location.search).get('id')||'':'';
+    const title=productId?(prod(productId)?.nombre||document.title):document.title;
+    const eventName=productId?'product_view':'page_view';
+    const img=new Image();
+    img.src=endpoint+'?action=track&visitor='+encodeURIComponent(visitor)+'&path='+encodeURIComponent(location.pathname+location.search)+'&title='+encodeURIComponent(title)+'&product='+encodeURIComponent(productId)+'&event='+eventName+'&t='+Date.now();
+  } catch(e) { /* el seguimiento no debe interrumpir la tienda */ }
+}
+
+function add(id,q) {
+  const p=prod(id); if(!p||!p.stock)return;
+  const c=getCart(),item=c.find(x=>x.id===id);
+  if(item)item.q=Math.min(99,item.q+q);else c.push({id,q:Math.min(99,Math.max(1,q))});
   setCart(c);
 }
 function head() {
-  const page = document.body.dataset.page;
-  const link = (href, label, key) => `<a href="${href}" class="${page === key ? 'on' : ''}">${label}</a>`;
-  $('#hd').innerHTML = `<div class="w">
-    <a href="index.html" aria-label="BBR, inicio"><img src="logo.png" alt="BBR"></a>
-    <nav aria-label="Navegación principal">${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}</nav>
-    <a class="cart" href="pedido.html">Mi pedido (${count()})</a>
-  </div>`;
+  const page=document.body.dataset.page;
+  const link=(href,label,key)=>`<a href="${href}" class="${page===key?'on':''}">${label}</a>`;
+  $('#hd').innerHTML=`<div class="w"><a href="index.html" aria-label="BBR, inicio"><img src="logo.png" alt="BBR"></a><nav aria-label="Navegación principal">${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}</nav><a class="cart" href="pedido.html">Mi pedido (${count()})</a></div>`;
 }
 function foot() {
-  $('#ft').innerHTML = `<div class="w">
-    <div><img src="logo.png" alt="BBR"><p>Soluciones inteligentes. Una vida mejor. 🇬🇶</p></div>
-    <div><b>Ubicación</b><p>Malabo, Guinea Ecuatorial 🇬🇶</p><p>Pedidos online de forma sencilla y cómoda.</p></div>
-    <div><b>BBR</b><p>Gracias por elegirnos. Seguimos buscando soluciones útiles para tu día a día.</p><p class="founder">Fundador<br>Gabriel Gueriberi Bang</p></div>
-  </div>`;
+  $('#ft').innerHTML=`<div class="w"><div><img src="logo.png" alt="BBR"><p>Soluciones inteligentes. Una vida mejor. 🇬🇶</p></div><div><b>Ubicación</b><p>Malabo, Guinea Ecuatorial 🇬🇶</p><p>Pedidos online de forma sencilla y cómoda.</p></div><div><b>BBR</b><p>Gracias por elegirnos. Seguimos buscando soluciones útiles para tu día a día.</p><p class="founder">Fundador<br>Gabriel Gueriberi Bang</p></div></div>`;
 }
 function card(p) {
-  return `<article class="card">
-    <a href="producto.html?id=${encodeURIComponent(p.id)}" aria-label="Ver ${p.nombre}">
-      <img src="${p.img}" alt="${p.nombre}" loading="lazy">
-    </a>
-    <div><b>${p.nombre}</b><span class="price">${fmt(p.precio)}</span>
-      <span class="${p.stock ? 'ok' : 'no'}">${p.stock ? 'Disponible' : 'Agotado'}</span>
-      <a class="btn s" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a>
-    </div>
-  </article>`;
+  return `<article class="card"><a href="producto.html?id=${encodeURIComponent(p.id)}" aria-label="Ver ${p.nombre}"><img src="${p.img}" alt="${p.nombre}" loading="lazy"></a><div><b>${p.nombre}</b><span class="price">${fmt(p.precio)}</span><span class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</span><a class="btn s" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a></div></article>`;
 }
-function qtyBox(el, get, set, min = 1) {
-  const render = () => {
-    el.innerHTML = `<button type="button" aria-label="Disminuir cantidad">−</button><span>${get()}</span><button type="button" aria-label="Aumentar cantidad">+</button>`;
-  };
-  render();
-  el.onclick = e => {
-    const button = e.target.closest('button');
-    if (!button) return;
-    const next = get() + (button.textContent.trim() === '+' ? 1 : -1);
-    set(Math.max(min, Math.min(99, next)));
-    render();
-  };
+function qtyBox(el,get,set,min=1) {
+  const render=()=>{el.innerHTML=`<button type="button" aria-label="Disminuir cantidad">−</button><span>${get()}</span><button type="button" aria-label="Aumentar cantidad">+</button>`;};
+  render();el.onclick=e=>{const button=e.target.closest('button');if(!button)return;const next=get()+(button.textContent.trim()==='+'?1:-1);set(Math.max(min,Math.min(99,next)));render();};
 }
-function homePage() {
-  $('#feat').innerHTML = PRODUCTS.filter(p => p.destacado).map(card).join('');
-}
-function catalogPage() {
-  $('#list').innerHTML = PRODUCTS.map(card).join('') || '<p>Próximamente añadiremos productos.</p>';
-}
+function homePage(){ $('#feat').innerHTML=PRODUCTS.filter(p=>p.destacado).map(card).join(''); }
+function catalogPage(){ $('#list').innerHTML=PRODUCTS.map(card).join('')||'<p>Próximamente añadiremos productos.</p>'; }
 function productPage() {
-  const p = prod(new URLSearchParams(location.search).get('id'));
-  const mount = $('#pd');
-  if (!p) {
-    mount.innerHTML = '<p>Producto no encontrado. <a class="btn s" href="catalogo.html">Volver al catálogo</a></p>';
-    return;
-  }
-  let q = 1;
-  mount.innerHTML = `<div class="frame"><img src="${p.img}" alt="${p.nombre}"></div>
-    <div><h1 class="product-title">${p.nombre}</h1><p class="price">${fmt(p.precio)}</p>
-    <p class="${p.stock ? 'ok' : 'no'}">${p.stock ? 'Disponible' : 'Agotado'}</p>
-    <p class="lead product-desc">${p.desc}</p>
-    <p class="label-inline">Cantidad</p><div class="qty" id="q"></div>
-    <p class="tot" id="t"></p><div class="acts">
-      <button class="btn s" id="a" ${p.stock ? '' : 'disabled'}>Añadir al pedido</button>
-      <button class="btn" id="r" ${p.stock ? '' : 'disabled'}>Continuar al pedido</button>
-    </div><p class="mut" id="m" role="status"></p></div>`;
-  const updateTotal = () => { $('#t').textContent = `Subtotal: ${fmt(p.precio * q)}`; };
-  qtyBox($('#q'), () => q, v => { q = v; updateTotal(); });
-  updateTotal();
-  $('#a').onclick = () => { add(p.id, q); $('#m').textContent = 'Producto añadido a tu pedido.'; };
-  $('#r').onclick = () => { add(p.id, q); location.href = 'pedido.html'; };
+  const p=prod(new URLSearchParams(location.search).get('id')),mount=$('#pd');
+  if(!p){mount.innerHTML='<p>Producto no encontrado. <a class="btn s" href="catalogo.html">Volver al catálogo</a></p>';return;}
+  let q=1;
+  mount.innerHTML=`<div class="frame"><img src="${p.img}" alt="${p.nombre}"></div><div><h1 class="product-title">${p.nombre}</h1><p class="price">${fmt(p.precio)}</p><p class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</p><p class="lead product-desc">${p.desc}</p><p class="label-inline">Cantidad</p><div class="qty" id="q"></div><p class="tot" id="t"></p><div class="acts"><button class="btn s" id="a" ${p.stock?'':'disabled'}>Añadir al pedido</button><button class="btn" id="r" ${p.stock?'':'disabled'}>Continuar al pedido</button></div><p class="mut" id="m" role="status"></p></div>`;
+  const updateTotal=()=>{$('#t').textContent=`Subtotal: ${fmt(p.precio*q)}`;};
+  qtyBox($('#q'),()=>q,v=>{q=v;updateTotal();});updateTotal();
+  $('#a').onclick=()=>{add(p.id,q);$('#m').textContent='Producto añadido a tu pedido.';};
+  $('#r').onclick=()=>{add(p.id,q);location.href='pedido.html';};
 }
 function orderPage() {
-  const lines = $('#lines');
-  const form = $('#fm');
-  const summary = $('#sum');
-
-  const draw = () => {
-    const cart = getCart();
-    if (!cart.length) {
-      lines.innerHTML = '<p>Tu pedido está vacío.</p><a class="btn" href="catalogo.html">Explorar productos</a>';
-      form.hidden = true;
-      return;
-    }
-    form.hidden = false;
-    lines.innerHTML = cart.map(item => {
-      const p = prod(item.id);
-      return `<div class="line"><div><b>${p.nombre}</b><br><span class="mut">${fmt(p.precio)} × ${item.q}</span></div>
-        <div class="qty" data-id="${p.id}"></div><b>${fmt(p.precio * item.q)}</b>
-        <button class="remove" type="button" data-remove="${p.id}">Eliminar</button></div>`;
-    }).join('') + `<p class="tot">Total: ${fmt(total())}</p>`;
-    lines.querySelectorAll('.qty').forEach(el => {
-      const id = el.dataset.id;
-      qtyBox(el, () => getCart().find(x => x.id === id)?.q || 1, value => {
-        const next = getCart().map(x => x.id === id ? {...x, q: value} : x);
-        setCart(next); draw();
-      });
-    });
-    lines.querySelectorAll('[data-remove]').forEach(btn => btn.onclick = () => {
-      setCart(getCart().filter(x => x.id !== btn.dataset.remove)); draw();
-    });
+  const lines=$('#lines'),form=$('#fm');
+  const draw=()=>{
+    const cart=getCart();
+    if(!cart.length){lines.innerHTML='<p>Tu pedido está vacío.</p><a class="btn" href="catalogo.html">Explorar productos</a>';form.hidden=true;return;}
+    form.hidden=false;
+    lines.innerHTML=cart.map(item=>{const p=prod(item.id);return `<div class="line"><div><b>${p.nombre}</b><br><span class="mut">${fmt(p.precio)} × ${item.q}</span></div><div class="qty" data-id="${p.id}"></div><b>${fmt(p.precio*item.q)}</b><button class="remove" type="button" data-remove="${p.id}">Eliminar</button></div>`;}).join('')+`<p class="tot">Total: ${fmt(total())}</p>`;
+    lines.querySelectorAll('.qty').forEach(el=>{const id=el.dataset.id;qtyBox(el,()=>getCart().find(x=>x.id===id)?.q||1,value=>{setCart(getCart().map(x=>x.id===id?{...x,q:value}:x));draw();});});
+    lines.querySelectorAll('[data-remove]').forEach(btn=>btn.onclick=()=>{setCart(getCart().filter(x=>x.id!==btn.dataset.remove));draw();});
   };
   draw();
-
-
 }
-document.addEventListener('DOMContentLoaded', () => {
-  head();
-  foot();
-  const routes = {home: homePage, cat: catalogPage, prod: productPage, ped: orderPage};
-  (routes[document.body.dataset.page] || homePage)();
+document.addEventListener('DOMContentLoaded',()=>{
+  head();foot();trackBBRVisit();
+  const routes={home:homePage,cat:catalogPage,prod:productPage,ped:orderPage};
+  (routes[document.body.dataset.page]||homePage)();
 });
