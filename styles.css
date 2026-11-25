@@ -46,3 +46,28 @@ input:focus,textarea:focus{border-color:var(--o);outline:0}
 .err{color:#e57373;font-size:14px;margin-top:6px}
 footer{border-top:1px solid #2a2a2a;padding:36px 0;margin-top:30px;color:var(--g);font-size:14px}
 footer .w{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}footer img{height:44px;margin-bottom:8px}
+
+
+/* Ajustes de navegación móvil y legibilidad */
+.product-title{font-size:clamp(25px,5vw,34px);line-height:1.2;margin:0 0 14px}
+.product-desc{margin-top:14px}
+.label-inline{font-size:14px;font-weight:700;margin:18px 0 8px}
+.remove{border:1px solid #555;border-radius:999px;background:transparent;color:var(--g);padding:8px 12px;cursor:pointer}
+.remove:hover{border-color:var(--o);color:var(--o)}
+.card .btn{margin-top:8px;text-align:center}
+.card>a:first-child{display:block}
+.card>a:first-child img{width:100%}
+#sum{line-height:1.8}
+#sum h2{margin-bottom:10px}
+#sum p{margin:8px 0}
+@media(max-width:520px){
+  header .w{height:auto;min-height:64px;flex-wrap:wrap;padding:10px 0}
+  header img{height:34px}
+  nav{gap:12px;font-size:13px}
+  .cart{font-size:12px;padding:6px 10px}
+  .hero{padding:28px 0 36px}
+  section{padding:32px 0}
+  .line{align-items:flex-start}
+  .line>div:first-child{width:100%}
+  .acts .btn{width:100%;text-align:center}
+}
