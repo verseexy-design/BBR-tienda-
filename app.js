@@ -45,9 +45,9 @@ function head() {
 }
 function foot() {
   $('#ft').innerHTML = `<div class="w">
-    <div><img src="logo.png" alt="BBR"><p>Soluciones inteligentes. Una vida mejor.</p></div>
-    <div><b>Ubicación</b><p>Malabo, Guinea Ecuatorial</p></div>
-    <div><b>Información</b><p>Realiza tu pedido online de forma sencilla y segura. BBR — Soluciones inteligentes. Una vida mejor.</p></div>
+    <div><img src="logo.png" alt="BBR"><p>Soluciones inteligentes. Una vida mejor. 🇬🇶</p></div>
+    <div><b>Ubicación</b><p>Malabo, Guinea Ecuatorial 🇬🇶</p><p>Pedidos online de forma sencilla y cómoda.</p></div>
+    <div><b>BBR</b><p>Gracias por elegirnos. Seguimos buscando soluciones útiles para tu día a día.</p><p class="founder">Fundador<br>Gabriel Gueriberi Bang</p></div>
   </div>`;
 }
 function card(p) {
