@@ -59,19 +59,21 @@ document.addEventListener('DOMContentLoaded', () => {
     error.textContent = '';
 
     try {
-      const response = await fetch(`${SUPABASE_URL}/rest/v1/orders`, {
+      const response = await fetch(`${SUPABASE_URL}/rest/v1/BBR`, {
         method: 'POST',
         headers: {
           'apikey': SUPABASE_KEY,
           'Authorization': `Bearer ${SUPABASE_KEY}`,
           'Content-Type': 'application/json',
-          'Prefer': 'return=minimal'
+          'Prefer': 'return=minimal',
+          'Content-Profile': 'public'
         },
         body: JSON.stringify(order)
       });
 
       if (!response.ok) {
-        throw new Error('No se pudo registrar el pedido.');
+        const detail = await response.text();
+        throw new Error(`Supabase ${response.status}: ${detail || response.statusText}`);
       }
 
       localStorage.removeItem('bbr_cart');
@@ -95,8 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
       summary.scrollIntoView({ behavior: 'smooth' });
 
     } catch (err) {
+      console.error('BBR Supabase error:', err);
       error.textContent =
-        'No se pudo registrar el pedido. Comprueba tu conexión e inténtalo de nuevo.';
+        `No se pudo registrar el pedido. ${err.message || 'Comprueba tu conexión e inténtalo de nuevo.'}`;
       button.disabled = false;
       button.textContent = 'REALIZAR PEDIDO';
     }
