@@ -1,103 +1,82 @@
 /**
- * BBR - Receptor de pedidos para Google Sheets
- * 1) Ejecuta setupBBR() una vez desde el editor.
- * 2) Autoriza los permisos y consulta el registro para copiar la URL de la hoja.
- * 3) Implementa como aplicación web: Ejecutar como tú / Acceso: Cualquier persona.
+ * BBR - Notificaciones de pedidos por correo.
+ * Destino: verseexy@gmail.com
+ *
+ * Configuración:
+ * 1. Pega este código en Google Apps Script.
+ * 2. Ejecuta authorizeBBRMail() una vez y acepta permisos.
+ * 3. Implementa > Nueva implementación > Aplicación web.
+ *    Ejecutar como: Yo. Quién tiene acceso: Cualquier persona.
+ * 4. Copia la URL /exec y configúrala en la tienda BBR.
  */
-function setupBBR() {
-  const props = PropertiesService.getScriptProperties();
-  let id = props.getProperty('BBR_SPREADSHEET_ID');
-  let ss;
 
-  if (id) {
-    ss = SpreadsheetApp.openById(id);
-  } else {
-    ss = SpreadsheetApp.create('BBR - PEDIDOS');
-    id = ss.getId();
-    props.setProperty('BBR_SPREADSHEET_ID', id);
-  }
+const BBR_EMAIL = 'verseexy@gmail.com';
 
-  let sheet = ss.getSheetByName('PEDIDOS BBR');
-  if (!sheet) sheet = ss.getSheets()[0].setName('PEDIDOS BBR');
+function authorizeBBRMail() {
+  // Solicita autorización para enviar correos desde tu cuenta.
+  MailApp.getRemainingDailyQuota();
+}
 
-  if (sheet.getLastRow() === 0) {
-    sheet.appendRow([
-      'Fecha', 'Cliente', 'Teléfono', 'Producto', 'Cantidad',
-      'Precio unitario (XAF)', 'Total (XAF)', 'Dirección',
-      'Método de pago', 'Estado'
-    ]);
-    sheet.setFrozenRows(1);
-    sheet.getRange(1, 1, 1, 10).setFontWeight('bold');
-  }
-
-  Logger.log('BBR_SPREADSHEET_URL=' + ss.getUrl());
-  return ss.getUrl();
+function doGet() {
+  return ContentService
+    .createTextOutput(JSON.stringify({ ok: true, service: 'BBR email notifications' }))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
   try {
     const raw = e && e.postData && e.postData.contents;
-    if (!raw) return json_({ ok: false, error: 'Solicitud vacía' });
+    if (!raw) return output_({ ok: false, error: 'Solicitud vacía' });
 
-    const data = JSON.parse(raw);
+    const order = JSON.parse(raw);
     const required = [
       'customer_name', 'customer_phone', 'product_name',
-      'quantity', 'unit_price_xaf', 'total_xaf', 'delivery_address'
+      'quantity', 'total_xaf', 'delivery_address'
     ];
-
     for (const key of required) {
-      if (data[key] === undefined || data[key] === null || String(data[key]).trim() === '') {
-        return json_({ ok: false, error: 'Falta un dato obligatorio: ' + key });
+      if (order[key] === undefined || order[key] === null || String(order[key]).trim() === '') {
+        return output_({ ok: false, error: 'Falta el dato: ' + key });
       }
     }
 
-    const quantity = Number(data.quantity);
-    const unit = Number(data.unit_price_xaf);
-    const total = Number(data.total_xaf);
-    if (!Number.isInteger(quantity) || quantity < 1 ||
-        !Number.isFinite(unit) || unit < 0 ||
-        !Number.isFinite(total) || total < 0) {
-      return json_({ ok: false, error: 'Importes o cantidad no válidos' });
+    const amount = Number(order.total_xaf);
+    const quantity = Number(order.quantity);
+    if (!Number.isFinite(amount) || amount < 0 || !Number.isInteger(quantity) || quantity < 1) {
+      return output_({ ok: false, error: 'Importe o cantidad no válidos' });
     }
 
-    const props = PropertiesService.getScriptProperties();
-    const id = props.getProperty('BBR_SPREADSHEET_ID');
-    if (!id) throw new Error('Primero ejecuta setupBBR()');
+    const subject = '🛍️ BBR — PEDIDO REALIZADO +' +
+      amount.toLocaleString('es-ES') + ' XAF';
 
-    const lock = LockService.getScriptLock();
-    lock.waitLock(15000);
-    try {
-      const ss = SpreadsheetApp.openById(id);
-      const sheet = ss.getSheetByName('PEDIDOS BBR');
-      if (!sheet) throw new Error('No existe la hoja PEDIDOS BBR');
+    const body =
+      '¡NUEVO PEDIDO REALIZADO EN BBR!\n\n' +
+      'IMPORTE: ' + amount.toLocaleString('es-ES') + ' XAF\n\n' +
+      'CLIENTE: ' + order.customer_name + '\n' +
+      'TELÉFONO / WHATSAPP: ' + order.customer_phone + '\n' +
+      'PRODUCTO: ' + order.product_name + '\n' +
+      'CANTIDAD: ' + quantity + '\n' +
+      'PRECIO UNITARIO: ' + Number(order.unit_price_xaf || 0).toLocaleString('es-ES') + ' XAF\n' +
+      'DIRECCIÓN: ' + order.delivery_address + '\n\n' +
+      'PAGO: Efectivo contra entrega\n' +
+      'ESTADO: PEDIDO REALIZADO\n\n' +
+      'BBR — Soluciones inteligentes. Una vida mejor.';
 
-      sheet.appendRow([
-        new Date(),
-        String(data.customer_name).slice(0, 120),
-        String(data.customer_phone).slice(0, 80),
-        String(data.product_name).slice(0, 500),
-        quantity, Math.round(unit), Math.round(total),
-        String(data.delivery_address).slice(0, 500),
-        'Efectivo contra entrega',
-        'PEDIDO REALIZADO'
-      ]);
-    } finally {
-      lock.releaseLock();
-    }
+    MailApp.sendEmail({
+      to: BBR_EMAIL,
+      subject: subject,
+      body: body,
+      name: 'BBR Tienda'
+    });
 
-    return json_({ ok: true, message: 'Pedido BBR guardado' });
+    return output_({ ok: true, message: 'Notificación enviada a BBR' });
   } catch (err) {
     console.error(err);
-    return json_({ ok: false, error: String(err.message || err) });
+    return output_({ ok: false, error: String(err.message || err) });
   }
 }
 
-function doGet() {
-  return json_({ ok: true, service: 'BBR Orders', message: 'Servicio activo' });
-}
-
-function json_(obj) {
+function output_(data) {
   return ContentService
-    .createTextOutput(JSON.stringify(obj))
+    .createTextOutput(JSON.stringify(data))
     .setMimeType(ContentService.MimeType.JSON);
 }
