@@ -71,3 +71,23 @@ footer .w{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(220
   .line>div:first-child{width:100%}
   .acts .btn{width:100%;text-align:center}
 }
+
+
+/* BBR premium refresh */
+.eyebrow{color:var(--o);font-size:11px;font-weight:800;letter-spacing:.2em;margin-bottom:10px}
+.hero{position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:rgba(212,175,55,.07);filter:blur(70px);top:-100px;right:-100px;pointer-events:none}
+.hero .w{position:relative}
+.hero h1{max-width:13ch;letter-spacing:-.04em}
+.hero .lead{font-size:17px;line-height:1.8}
+.hero-note{font-size:12px;color:var(--g);margin-top:18px;letter-spacing:.04em}
+.hero .frame{box-shadow:0 18px 55px rgba(212,175,55,.12)}
+.card{transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.card:hover{transform:translateY(-5px);box-shadow:0 14px 34px rgba(0,0,0,.28)}
+.btn{transition:transform .2s ease,box-shadow .2s ease,filter .2s ease}
+.btn:active{transform:scale(.97)}
+.adv p{background:linear-gradient(110deg,rgba(255,255,255,.035),transparent);border-radius:0 12px 12px 0;padding:14px}
+footer .founder{font-family:Georgia,serif;font-style:italic;color:var(--o);font-size:15px;letter-spacing:.03em;margin-top:16px}
+@media(min-width:760px){.hero{padding:68px 0 76px}.hero .w{gap:56px}}
+@media(prefers-reduced-motion:no-preference){.hero .w>div:first-child{animation:rise .7s ease both}.hero .frame{animation:rise .9s .12s ease both}}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
