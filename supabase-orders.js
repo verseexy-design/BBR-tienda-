@@ -2,19 +2,21 @@ document.addEventListener('DOMContentLoaded', () => {
   const form = document.querySelector('#fm');
   if (!form) return;
 
-  const SUPABASE_URL = 'https://ajvubdktkkpdztkjgqxm.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_8wjj8Odlj4xU0AYbE7z0sw_3adFOdvu';
+  // Endpoint de Google Apps Script de BBR
+  const BBR_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzB5B_RkVLstaF6SQ74WMmVae53P4TRMBO4xQ9oB3JIGYcxeHhRrD5Bqc1YK6l3I5fLfQ/exec';
 
-  form.onsubmit = async (e) => {
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
 
-    if (form.web.value) return;
+    if (form.elements.web.value) return;
 
     const data = Object.fromEntries(new FormData(form));
     const cart = getCart();
+    const error = document.querySelector('#er');
+    const button = form.querySelector('button[type="submit"]');
 
     if (!cart.length) {
-      document.querySelector('#er').textContent = 'Tu pedido está vacío.';
+      error.textContent = 'Tu pedido está vacío.';
       return;
     }
 
@@ -26,8 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
       data.barrio.trim().length < 2 ||
       data.dir.trim().length < 5
     ) {
-      document.querySelector('#er').textContent =
-        'Comprueba todos tus datos de entrega.';
+      error.textContent = 'Comprueba todos tus datos de entrega.';
       return;
     }
 
@@ -51,39 +52,57 @@ document.addEventListener('DOMContentLoaded', () => {
       status: 'REALIZADO'
     };
 
-    const button = form.querySelector('button[type="submit"]');
-    const error = document.querySelector('#er');
-
     button.disabled = true;
-    button.textContent = 'REGISTRANDO PEDIDO...';
+    button.textContent = 'ENVIANDO PEDIDO...';
     error.textContent = '';
 
-    try {
-      const response = await fetch(`${SUPABASE_URL}/rest/v1/BBR`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_KEY,
-          'Authorization': `Bearer ${SUPABASE_KEY}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=minimal',
-          'Content-Profile': 'public'
-        },
-        body: JSON.stringify(order)
-      });
+    // Enviar mediante un formulario HTML oculto para evitar bloqueos CORS
+    // del navegador al comunicarse con Google Apps Script.
+    const frameName = 'bbr_order_frame_' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = frameName;
+    iframe.title = 'Envío seguro del pedido';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
 
-      if (!response.ok) {
-        const detail = await response.text();
-        throw new Error(`Supabase ${response.status}: ${detail || response.statusText}`);
-      }
+    const hiddenForm = document.createElement('form');
+    hiddenForm.method = 'POST';
+    hiddenForm.action = BBR_SCRIPT_URL;
+    hiddenForm.target = frameName;
+    hiddenForm.style.display = 'none';
+
+    const payload = document.createElement('input');
+    payload.type = 'hidden';
+    payload.name = 'payload';
+    payload.value = JSON.stringify(order);
+    hiddenForm.appendChild(payload);
+    document.body.appendChild(hiddenForm);
+
+    let finished = false;
+    const timeout = window.setTimeout(() => {
+      if (finished) return;
+      finished = true;
+      error.textContent = 'No hemos podido confirmar el envío. Comprueba tu conexión antes de volver a intentarlo.';
+      button.disabled = false;
+      button.textContent = 'REINTENTAR PEDIDO';
+      hiddenForm.remove();
+      iframe.remove();
+    }, 20000);
+
+    iframe.addEventListener('load', () => {
+      // Ignorar la primera carga inicial del iframe.
+      if (finished || !hiddenForm.dataset.submitted) return;
+      finished = true;
+      window.clearTimeout(timeout);
 
       localStorage.removeItem('bbr_cart');
 
       const summary = document.querySelector('#sum');
       summary.hidden = false;
       summary.innerHTML = `
-        <h2>¡PEDIDO REALIZADO!</h2>
+        <h2>¡PEDIDO ENVIADO!</h2>
         <p>Gracias, ${order.customer_name}.</p>
-        <p>Tu pedido se ha registrado correctamente.</p>
+        <p>Hemos enviado tu pedido a BBR. Nos pondremos en contacto contigo para confirmar la entrega.</p>
         <h2>+${amount.toLocaleString('es-ES')} XAF</h2>
         <p>Pago: efectivo contra entrega.</p>
         <p>BBR — Soluciones inteligentes. Una vida mejor.</p>
@@ -91,17 +110,17 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
 
       form.hidden = true;
-      document.querySelector('#lines').innerHTML =
-        '<p>Pedido registrado correctamente.</p>';
-
+      document.querySelector('#lines').innerHTML = '<p>Pedido enviado.</p>';
       summary.scrollIntoView({ behavior: 'smooth' });
 
-    } catch (err) {
-      console.error('BBR Supabase error:', err);
-      error.textContent =
-        `No se pudo registrar el pedido. ${err.message || 'Comprueba tu conexión e inténtalo de nuevo.'}`;
-      button.disabled = false;
-      button.textContent = 'REALIZAR PEDIDO';
-    }
-  };
+      window.setTimeout(() => {
+        hiddenForm.remove();
+        iframe.remove();
+      }, 1000);
+    });
+
+    document.body.appendChild(hiddenForm);
+    hiddenForm.dataset.submitted = 'true';
+    hiddenForm.submit();
+  });
 });
