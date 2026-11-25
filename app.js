@@ -135,37 +135,7 @@ function orderPage() {
   };
   draw();
 
-  form.onsubmit = e => {
-    e.preventDefault();
-    if (form.web.value) return;
-    const data = Object.fromEntries(new FormData(form));
-    const errors = [];
-    if (data.nombre.trim().length < 3) errors.push('Escribe tu nombre completo.');
-    if (!/^\+?[\d\s()-]{7,18}$/.test(data.tel.trim())) errors.push('Comprueba el teléfono.');
-    if (!/^\+?[\d\s()-]{7,18}$/.test(data.wa.trim())) errors.push('Comprueba el WhatsApp.');
-    if (data.ciudad.trim().length < 2 || data.barrio.trim().length < 2) errors.push('Indica ciudad y barrio.');
-    if (data.dir.trim().length < 5) errors.push('Escribe una dirección de entrega completa.');
-    if (!getCart().length) errors.push('Tu pedido está vacío.');
-    $('#er').textContent = errors.join(' ');
-    if (errors.length) return;
 
-    summary.hidden = false;
-    summary.replaceChildren();
-    const title = document.createElement('h2');
-    title.textContent = 'Revisa los datos de tu pedido';
-    const details = document.createElement('p');
-    details.textContent = `${data.nombre} · Tel: ${data.tel} · WhatsApp: ${data.wa} · ${data.ciudad}, ${data.barrio} · ${data.dir}${data.obs ? ' · Observaciones: ' + data.obs : ''}`;
-    const products = document.createElement('p');
-    products.textContent = getCart().map(i => `${prod(i.id).nombre} × ${i.q}`).join(' | ');
-    const amount = document.createElement('p');
-    amount.className = 'tot';
-    amount.textContent = `Total solicitado: ${fmt(total())}`;
-    const notice = document.createElement('p');
-    notice.className = 'mut';
-    notice.textContent = 'IMPORTANTE: esta versión todavía no guarda ni envía pedidos. Estamos preparando la conexión segura a la base de datos.';
-    summary.append(title, details, products, amount, notice);
-    summary.scrollIntoView({behavior: 'smooth', block: 'center'});
-  };
 }
 document.addEventListener('DOMContentLoaded', () => {
   head();
