@@ -3,7 +3,7 @@
  * Configura la clave con configurarClaveBBRView() y vuelve a implementar el Web App.
  */
 const BBR_EMAIL = 'verseexy@gmail.com';
-const BBR_ORDER_SUBJECT = 'Pedido realizado';
+const BBR_ORDER_SUBJECTS = ['Pedido realizado', 'Nuevo pedido recibido'];
 
 function setupBBRDatabase() {
   const props = PropertiesService.getScriptProperties();
@@ -56,9 +56,9 @@ function doPost(e) {
     if (!Number.isFinite(amount) || amount <= 0 || !Number.isInteger(quantity) || quantity < 1) throw new Error('Importe o cantidad no válidos');
 
     const id = 'BBR-' + Utilities.getUuid().slice(0,8).toUpperCase();
-    const subject = '🛍️ Pedido realizado +' + amount.toLocaleString('es-ES') + ' XAF';
-    const body = '¡NUEVO PEDIDO REALIZADO EN BBR!\\n\\nIMPORTE SOLICITADO: '+amount.toLocaleString('es-ES')+' XAF\\nCÓDIGO: '+id+'\\nCLIENTE: '+order.customer_name+'\\nTELÉFONO / WHATSAPP: '+order.customer_phone+'\\nPRODUCTO: '+order.product_name+'\\nCANTIDAD: '+quantity+'\\nDIRECCIÓN: '+order.delivery_address+'\\nPAGO: '+(order.payment_method||'Efectivo contra entrega')+'\\nESTADO: '+(order.status||'REALIZADO')+'\\n\\nBBR — Soluciones inteligentes. Una vida mejor.';
-    MailApp.sendEmail({to:BBR_EMAIL,subject:subject,body:body,name:'BBR Tienda'});
+    const subject = '🛍️ Nuevo pedido recibido · +' + amount.toLocaleString('es-ES') + ' FCFA';
+    const body = '¡PEDIDO RECIBIDO CORRECTAMENTE EN BBR!\\n\\nIMPORTE DEL PEDIDO: '+amount.toLocaleString('es-ES')+' FCFA\\nCÓDIGO: '+id+'\\nCLIENTE: '+order.customer_name+'\\nTELÉFONO / WHATSAPP: '+order.customer_phone+'\\nPRODUCTO: '+order.product_name+'\\nCANTIDAD: '+quantity+'\\nDIRECCIÓN: '+order.delivery_address+'\\nPAGO: '+(order.payment_method||'Efectivo contra entrega')+'\\nESTADO: '+(order.status||'PEDIDO RECIBIDO')+'\\n\\nNota: el pedido ha sido recibido; el pago aún no se considera cobrado.\\n\\nBBR — Soluciones inteligentes. Una vida mejor.';
+    MailApp.sendEmail({to:BBR_EMAIL,subject:subject,body:body,name:'BBR SHOP'});
     return output_({ok:true,id:id});
   } catch(err) {
     console.error(err);
@@ -99,11 +99,12 @@ function getStats_(pin, callback) {
   const savedPin = PropertiesService.getScriptProperties().getProperty('BBR_ADMIN_PIN');
   if (!savedPin || pin !== savedPin) return output_({ok:false,error:'Clave incorrecta o aún no configurada.'}, callback);
   try {
-    const query = 'to:'+BBR_EMAIL+' subject:"'+BBR_ORDER_SUBJECT+'"';
+    const query = 'to:'+BBR_EMAIL+' {subject:"Pedido realizado" subject:"Nuevo pedido recibido"}';
     const threads = GmailApp.search(query, 0, 500);
     let orders = [];
     threads.forEach(thread => thread.getMessages().forEach(message => {
-      if (message.getSubject().indexOf(BBR_ORDER_SUBJECT) !== -1) orders.push(parseOrderEmail_(message));
+      const subject = message.getSubject();
+      if (BBR_ORDER_SUBJECTS.some(label => subject.indexOf(label) !== -1)) orders.push(parseOrderEmail_(message));
     }));
     orders.sort((a,b)=>a.date-b.date);
     const activitySheet = getActivitySheet_();
