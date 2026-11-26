@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="styles.css?v=20261126-8">
 </head>
 <body data-page="profile">
-<header><div class="w header-inner"><a class="header-logo" href="index.html"><img src="logo.png" alt="BBR"></a><a class="cart" href="pedido.html">Mi pedido</a></div></header>
+<header><div class="w header-inner"><a class="header-logo" href="index.html"><img src="logo.png" alt="BBR"></a><a class="cart" href="pedido.html">Mi pedido</a><a class="header-profile" href="perfil.html" aria-label="Mi perfil"><img id="profile-header-avatar" alt=""><span>Mi perfil</span></a></div></header>
 <main><div class="profile-hub">
 <div class="profile-graffiti g1" aria-hidden="true">BOLD</div><div class="profile-graffiti g2" aria-hidden="true">BBR</div><div class="profile-graffiti g3" aria-hidden="true">YOUR VIBE</div>
 <div class="profile-float f1" aria-hidden="true">✦ PREMIUM MEMBER</div><div class="profile-float f2" aria-hidden="true">🇬🇶 MADE FOR YOU</div><div class="profile-float f3" aria-hidden="true">STYLE · ENERGY · BBR</div><div class="profile-float f4" aria-hidden="true">✳</div>
@@ -34,7 +34,7 @@ const app=getApps().length?getApps()[0]:initializeApp(config),auth=getAuth(app);
 const $=id=>document.getElementById(id),status=$("hub-status");
 let currentUser=null;
 const key=uid=>"bbr_profile_photo_"+uid;
-function render(user){currentUser=user;$("hub-name").textContent=user.displayName||"Cliente BBR";$("hub-email").textContent=user.email||"";$("new-name").value=user.displayName||"";$("hub-avatar").src=localStorage.getItem(key(user.uid))||user.photoURL||"https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png";}
+function render(user){currentUser=user;$("profile-header-avatar").src=localStorage.getItem(key(user.uid))||user.photoURL||"";$("hub-name").textContent=user.displayName||"Cliente BBR";$("hub-email").textContent=user.email||"";$("new-name").value=user.displayName||"";$("hub-avatar").src=localStorage.getItem(key(user.uid))||user.photoURL||"https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png";}
 onAuthStateChanged(auth,user=>{if(!user||!user.emailVerified){location.replace("cuenta.html");return;}render(user);});
 $("profile-gallery").addEventListener("change",e=>{
  const file=e.target.files&&e.target.files[0];if(!file)return;
@@ -44,7 +44,7 @@ $("profile-gallery").addEventListener("change",e=>{
    const size=420,canvas=document.createElement("canvas");canvas.width=size;canvas.height=size;
    const ctx=canvas.getContext("2d"),scale=Math.max(size/img.width,size/img.height),w=img.width*scale,h=img.height*scale;
    ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
-   try{const data=canvas.toDataURL("image/jpeg",.84);localStorage.setItem(key(currentUser.uid),data);$("hub-avatar").src=data;status.textContent="¡Foto de perfil actualizada!";}catch(err){status.textContent="No hay espacio suficiente en este navegador. Prueba con otra foto.";}
+   try{const data=canvas.toDataURL("image/jpeg",.84);localStorage.setItem(key(currentUser.uid),data);$("hub-avatar").src=data;$("profile-header-avatar").src=data;status.textContent="¡Foto de perfil actualizada!";}catch(err){status.textContent="No hay espacio suficiente en este navegador. Prueba con otra foto.";}
   };img.onerror=()=>status.textContent="No se pudo abrir esa imagen.";img.src=reader.result;
  };reader.readAsDataURL(file);
 });
