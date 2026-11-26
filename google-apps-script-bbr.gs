@@ -57,7 +57,23 @@ function doPost(e) {
 
     const id = 'BBR-' + Utilities.getUuid().slice(0,8).toUpperCase();
     const subject = '🛍️ Nuevo pedido recibido · +' + amount.toLocaleString('es-ES') + ' FCFA';
-    const body = '¡PEDIDO RECIBIDO CORRECTAMENTE EN BBR!\\n\\nIMPORTE DEL PEDIDO: '+amount.toLocaleString('es-ES')+' FCFA\\nCÓDIGO: '+id+'\\nCLIENTE: '+order.customer_name+'\\nTELÉFONO / WHATSAPP: '+order.customer_phone+'\\nPRODUCTO: '+order.product_name+'\\nCANTIDAD: '+quantity+'\\nDIRECCIÓN: '+order.delivery_address+'\\nPAGO: '+(order.payment_method||'Efectivo contra entrega')+'\\nESTADO: '+(order.status||'PEDIDO RECIBIDO')+'\\n\\nNota: el pedido ha sido recibido; el pago aún no se considera cobrado.\\n\\nBBR — Soluciones inteligentes. Una vida mejor.';
+    const body = [
+      '¡PEDIDO RECIBIDO CORRECTAMENTE EN BBR!',
+      '',
+      'IMPORTE DEL PEDIDO: ' + amount.toLocaleString('es-ES') + ' FCFA',
+      'CÓDIGO: ' + id,
+      'CLIENTE: ' + order.customer_name,
+      'TELÉFONO / WHATSAPP: ' + order.customer_phone,
+      'PRODUCTO: ' + order.product_name,
+      'CANTIDAD: ' + quantity,
+      'DIRECCIÓN: ' + order.delivery_address,
+      'PAGO: ' + (order.payment_method || 'Efectivo contra entrega'),
+      'ESTADO: ' + (order.status || 'PEDIDO RECIBIDO'),
+      '',
+      'Nota: el pedido ha sido recibido; el pago aún no se considera cobrado.',
+      '',
+      'BBR — Soluciones inteligentes. Una vida mejor.'
+    ].join('\n');
     MailApp.sendEmail({to:BBR_EMAIL,subject:subject,body:body,name:'BBR SHOP'});
     return output_({ok:true,id:id});
   } catch(err) {
