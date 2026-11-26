@@ -119,3 +119,35 @@ footer .footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(21
 .footer-founder span{display:block;color:#858b95;font-size:10px;text-transform:uppercase;letter-spacing:.15em}
 .footer-founder strong{display:block;color:#d4af37;font-family:Montserrat,system-ui,sans-serif;font-size:13px;font-weight:600;letter-spacing:.02em}
 @media(max-width:520px){footer .footer-grid{gap:20px}.footer-founder{margin-top:-8px}}
+
+
+/* BBR refined interaction and softer rectangular controls */
+:root{--paper:#f2f2ee;--ink:#171717}
+.btn{border-radius:12px;padding:13px 22px;letter-spacing:.015em}
+.btn:hover{transform:translateY(-2px);box-shadow:0 9px 24px rgba(212,175,55,.22);filter:brightness(1.04)}
+.btn:active{transform:translateY(0) scale(.985)}
+.btn.s{border-radius:12px}
+.cart{border-radius:10px}
+.remove{border-radius:10px}
+.qty button{border-radius:10px}
+input,textarea{border-radius:10px}
+.hero-cta span{display:inline-block;margin-left:8px;transition:transform .25s ease}
+.hero-cta:hover span{transform:translateY(3px)}
+html{scroll-behavior:smooth;scroll-padding-top:82px}
+#productos{scroll-margin-top:82px}
+.featured-section{background:var(--paper);color:var(--ink);position:relative;overflow:hidden}
+.featured-section h2{color:#171717}
+.featured-section .eyebrow{color:#9b761b}
+.featured-section .card{background:#fff;border:1px solid #e4e2da;box-shadow:0 8px 24px rgba(20,20,20,.055)}
+.featured-section .card:hover{border-color:#c9a43b;box-shadow:0 14px 30px rgba(20,20,20,.11)}
+.featured-section .card div{color:#202020}
+.featured-section .card .mut{color:#707070}
+.featured-section .price{color:#9b761b}
+.featured-section .btn.s{color:#8a6815;border-color:#b89432;background:#fff}
+.products-reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1)}
+.products-reveal.is-visible{opacity:1;transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .products-reveal{opacity:1;transform:none;transition:none}
+  .hero-cta span{transition:none}
+}
