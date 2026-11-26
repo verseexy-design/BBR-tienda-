@@ -6,7 +6,7 @@
 <link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261126-4">
+<link rel="stylesheet" href="styles.css?v=20261126-5">
 </head>
 <body data-page="account">
 <header id="hd"></header>
@@ -63,7 +63,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const $ = id => document.getElementById(id);
 const forms = $("auth-forms"), status = $("account-status"), message = $("account-message");
-const showMessage = (text,kind="") => { message.textContent=text; message.className="account-message"+(kind?" "+kind:""); };
+const showMessage = (text,kind="") => { message.textContent=text; message.className="account-message"+(kind?" "+kind:""); };\nlet busy = false;\nconst setBusy = (form,value,label) => { const button=form.querySelector('button[type="submit"]'); button.disabled=value; if(value){button.dataset.original=button.textContent;button.textContent=label;}else{button.textContent=button.dataset.original||button.textContent;} };
 const friendlyError = error => ({
  "auth/email-already-in-use":"Ese correo ya tiene una cuenta. Inicia sesión.",
  "auth/invalid-email":"El correo electrónico no tiene un formato válido.",
@@ -71,7 +71,7 @@ const friendlyError = error => ({
  "auth/invalid-credential":"Correo o contraseña incorrectos.",
  "auth/user-not-found":"No encontramos una cuenta con ese correo.",
  "auth/wrong-password":"La contraseña no es correcta.",
- "auth/too-many-requests":"Demasiados intentos. Espera un momento y vuelve a probar.",
+ "auth/too-many-requests":"Firebase ha limitado temporalmente los intentos desde este dispositivo o conexión. No sigas probando ahora: espera un rato antes de volver a intentarlo. No significa necesariamente que tu Gmail sea falso.",
  "auth/network-request-failed":"No se pudo conectar. Comprueba tu conexión a Internet.",
  "auth/operation-not-allowed":"El acceso por correo y contraseña aún no está habilitado en Firebase."
 }[error.code] || "No se pudo completar la operación. Revisa los datos e inténtalo de nuevo.");
@@ -80,7 +80,7 @@ document.querySelectorAll(".password-toggle").forEach(button=>button.addEventLis
 $("show-login").onclick=()=>{ $("register-view").classList.add("account-hidden"); $("login-view").classList.remove("account-hidden"); showMessage(""); };
 $("show-register").onclick=()=>{ $("login-view").classList.add("account-hidden"); $("register-view").classList.remove("account-hidden"); showMessage(""); };
 $("register-form").addEventListener("submit",async e=>{
- e.preventDefault(); const name=$("register-name").value.trim(),email=$("register-email").value.trim(),password=$("register-password").value;
+ e.preventDefault(); if(busy)return; const form=$("register-form"); const name=$("register-name").value.trim(),email=$("register-email").value.trim(),password=$("register-password").value;
  if(!name){showMessage("Escribe el nombre que quieres mostrar.","error");return;}
  showMessage("Creando tu cuenta…");
  try { const credential=await createUserWithEmailAndPassword(auth,email,password); await updateProfile(credential.user,{displayName:name}); await sendEmailVerification(credential.user); await signOut(auth); $("register-form").reset(); $("register-view").classList.add("account-hidden"); $("login-view").classList.remove("account-hidden"); $("login-email").value=email; showMessage("Hemos creado la cuenta y enviado un enlace de verificación a "+email+". Para entrar en BBR, primero abre ese correo y confirma la dirección. Hasta verificarla no podrás iniciar sesión.","success"); }
@@ -88,7 +88,7 @@ $("register-form").addEventListener("submit",async e=>{
 });
 $("login-form").addEventListener("submit",async e=>{
  e.preventDefault(); showMessage("Iniciando sesión…");
- try { const credential=await signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value); if(!credential.user.emailVerified){await sendEmailVerification(credential.user); await signOut(auth); showMessage("Tu correo todavía no está verificado. Te acabamos de enviar otro enlace. Abre el mensaje y confirma tu dirección antes de entrar.","error"); return;} showMessage("Sesión iniciada correctamente.","success"); }
+ try { const credential=await signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value); if(!credential.user.emailVerified){await sendEmailVerification(credential.user); await signOut(auth); showMessage("Tu correo todavía no está verificado. Busca el primer mensaje de Firebase en tu bandeja de entrada y también en Spam. Abre el enlace de verificación antes de iniciar sesión. No enviaremos otro enlace automáticamente para evitar bloqueos por demasiados intentos.","error"); return;} showMessage("Sesión iniciada correctamente.","success"); }
  catch(error){showMessage(friendlyError(error),"error");}
 });
 $("forgot-password").onclick=async()=>{
