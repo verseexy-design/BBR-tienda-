@@ -23,6 +23,21 @@ const PRODUCTS = [{
   stock: true,
   destacado: true,
   img: 'https://s.alicdn.com/@sc04/kf/Hac4924b5c7a746268f81cafca850053fh/Hot-Sale-Medical-Silicone-Magnetic-Anti-Snoring-Nose-Clip-Stopper-Anti-Snore-Device-Man-and-Woman.jpg'
+}, {
+  id: 'pasta-dental-herbal-menta',
+  nombre: 'Pasta Dental Herbal Blanqueadora de Menta',
+  desc: 'Pasta dental de uso diario con sabor a menta fresca y fórmula herbal. Presentación de referencia de 120 g. Diseñada para la higiene bucal y el cuidado anticaries; el efecto blanqueador puede variar. Las fotografías son de un producto herbal de menta similar y el envase o la marca pueden ser diferentes al artículo exacto del proveedor.',
+  precio: 10000,
+  stock: true,
+  destacado: true,
+  img: 'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste07456402565.jpg',
+  images: [
+    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste07456402565.jpg',
+    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste17560701082.jpg',
+    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste18442838588.jpg',
+    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste18443463726.jpg',
+    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste18444557919.jpg'
+  ]
 }];
 
 const fmt = n => `${Math.round(Number(n) || 0).toLocaleString('es-ES')} FCFA`;
@@ -146,7 +161,7 @@ function productPage() {
   const p=prod(new URLSearchParams(location.search).get('id')),mount=$('#pd');
   if(!p){mount.innerHTML='<p>Producto no encontrado. <a class="btn s" href="catalogo.html">Volver al catálogo</a></p>';return;}
   let q=1;
-  const gallery = p.id==='clip-antirronquidos-silicona' ? ["https://s.alicdn.com/@sc04/kf/H7b323db107114fd6bbdbc010ecbdb13aq.png","https://s.alicdn.com/@sc04/kf/Hae6ee1bca6884f4b967d50341a13c9a6R.png","https://s.alicdn.com/@sc04/kf/H7970336026b24ab59f852d0f14fe5377i.png","https://s.alicdn.com/@sc04/kf/H0ff63c661819404daead0e68017d2a44H.png","https://s.alicdn.com/@sc04/kf/H413f98171da14a75bc6b3c81cb51061de.jpg","https://s.alicdn.com/@sc04/kf/H9e4b647909f8466abeb9c14fc1a47609t.jpg"] : [p.img];
+  const gallery = p.images || (p.id==='clip-antirronquidos-silicona' ? ["https://s.alicdn.com/@sc04/kf/H7b323db107114fd6bbdbc010ecbdb13aq.png","https://s.alicdn.com/@sc04/kf/Hae6ee1bca6884f4b967d50341a13c9a6R.png","https://s.alicdn.com/@sc04/kf/H7970336026b24ab59f852d0f14fe5377i.png","https://s.alicdn.com/@sc04/kf/H0ff63c661819404daead0e68017d2a44H.png","https://s.alicdn.com/@sc04/kf/H413f98171da14a75bc6b3c81cb51061de.jpg","https://s.alicdn.com/@sc04/kf/H9e4b647909f8466abeb9c14fc1a47609t.jpg"] : [p.img]);
   const galleryMarkup = gallery.length>1 ? '<div class="bbr-gallery"><div class="bbr-gallery-track" id="bbr-gallery-track">'+gallery.map((src,i)=>'<figure class="bbr-gallery-slide"><img src="'+src+'" alt="'+p.nombre+' · imagen '+(i+1)+'" loading="'+(i===0?'eager':'lazy')+'"></figure>').join('')+'</div><div class="bbr-gallery-bottom"><span class="bbr-gallery-count" id="bbr-gallery-count">01 / 06</span><div class="bbr-gallery-dots">'+gallery.map((_,i)=>'<button type="button" data-gallery-dot="'+i+'" aria-label="Ver imagen '+(i+1)+'" class="'+(i===0?'active':'')+'"></button>').join('')+'</div><span class="bbr-gallery-hint">DESLIZA PARA VER MÁS ↔</span></div></div>' : '<div class="frame"><img src="'+p.img+'" alt="'+p.nombre+'"></div>';
   mount.innerHTML=`<div class="product-back-row"><button class="product-back-btn" type="button" id="bbr-product-back"><span aria-hidden="true">←</span> Volver atrás</button></div>${galleryMarkup}<div><h1 class="product-title">${p.nombre}</h1><p class="price">${fmt(p.precio)}</p><p class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</p><p class="lead product-desc">${p.desc}</p><p class="label-inline">Cantidad</p><div class="qty" id="q"></div><p class="tot" id="t"></p><div class="acts"><button class="btn s" id="a" ${p.stock?'':'disabled'}>Añadir al pedido</button><button class="btn" id="r" ${p.stock?'':'disabled'}>Continuar al pedido</button><button class="share-btn detail-share" type="button" data-share="${p.id}">↗ Compartir producto</button></div><p class="mut" id="m" role="status"></p></div>`;
   $('#bbr-product-back').onclick=()=>{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1)history.back();else location.href='catalogo.html';};
