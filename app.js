@@ -93,4 +93,19 @@ document.addEventListener('DOMContentLoaded',()=>{
   head();foot();trackBBRVisit();
   const routes={home:homePage,cat:catalogPage,prod:productPage,ped:orderPage};
   (routes[document.body.dataset.page]||homePage)();
+
+  const reveal=document.querySelector('.products-reveal');
+  if(reveal && 'IntersectionObserver' in window){
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    },{threshold:0.12});
+    observer.observe(reveal);
+  }else if(reveal){
+    reveal.classList.add('is-visible');
+  }
 });
