@@ -23,10 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (
       data.nombre.trim().length < 3 ||
       data.tel.trim().length < 7 ||
-      data.wa.trim().length < 7 ||
-      data.ciudad.trim().length < 2 ||
-      data.barrio.trim().length < 2 ||
-      data.dir.trim().length < 5
+      data.dir.trim().length < 8
     ) {
       error.textContent = 'Comprueba todos tus datos de entrega.';
       return;
@@ -42,12 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const order = {
       customer_name: data.nombre.trim(),
-      customer_phone: `${data.tel.trim()} | WhatsApp: ${data.wa.trim()}`,
+      customer_phone: data.tel.trim(),
       product_name: products.join(' | '),
       quantity: quantity,
       unit_price_xaf: Math.round(amount / quantity),
       total_xaf: amount,
-      delivery_address: `${data.ciudad}, ${data.barrio}. ${data.dir}. ${data.obs || ''}`,
+      delivery_address: `${data.dir.trim()}. ${data.obs || ''}`,
       payment_method: 'EFECTIVO_CONTRA_ENTREGA',
       status: 'REALIZADO'
     };
