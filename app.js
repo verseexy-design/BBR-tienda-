@@ -46,7 +46,17 @@ function head() {
   $('#hd').innerHTML=`<div class="w"><a href="index.html" aria-label="BBR, inicio"><img src="logo.png" alt="BBR"></a><nav aria-label="Navegación principal">${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}</nav><a class="cart" href="pedido.html">Mi pedido (${count()})</a></div>`;
 }
 function foot() {
-  $('#ft').innerHTML=`<div class="w"><div><img src="logo.png" alt="BBR"><p>Soluciones inteligentes. Una vida mejor. 🇬🇶</p></div><div><b>Ubicación</b><p>Malabo, Guinea Ecuatorial 🇬🇶</p><p>Pedidos online de forma sencilla y cómoda.</p></div><div><b>BBR</b><p>Gracias por elegirnos. Seguimos buscando soluciones útiles para tu día a día.</p><p class="founder">Fundador<br>Gabriel Gueriberi Bang</p></div></div>`;
+  $('#ft').innerHTML=`<div class="w footer-grid">
+    <div class="footer-brand"><img src="logo.png" alt="BBR"><p>Soluciones inteligentes. Una vida mejor. 🇬🇶</p><p class="footer-location">Guinea Ecuatorial · Atención online</p></div>
+    <div class="footer-info"><b>Pedidos y delivery</b><p>Realiza tu pedido en la web. Nos pondremos en contacto contigo para confirmar disponibilidad, ubicación y detalles de entrega.</p><p>La cobertura, el plazo y el coste se confirman según la zona.</p></div>
+    <div class="footer-social"><b>Conecta con BBR</b><p class="social-soon">Nuestras redes sociales estarán disponibles próximamente.</p><div class="social-icons" aria-label="Redes sociales próximamente">
+      <span title="Instagram próximamente" aria-label="Instagram próximamente"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></span>
+      <span title="Facebook próximamente" aria-label="Facebook próximamente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1.2.4-2 2-2h1.7V1.4C17 1.2 15.8 1 14.4 1 11 1 9 3 9 6.7V9H6v4h3v8z"></path></svg></span>
+      <span title="TikTok próximamente" aria-label="TikTok próximamente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v11.2a4.1 4.1 0 1 1-3.5-4.05V6.6a7.5 7.5 0 1 0 7 7.45V9.8a9 9 0 0 0 4 1V7.2c-3.2-.1-5.8-1.8-7.5-4.2z"></path></svg></span>
+      </div></div>
+    <div class="footer-legal"><p>Privacidad: utilizamos los datos facilitados únicamente para gestionar tu solicitud, contactar contigo y coordinar el pedido y su entrega. No envíes información personal que no sea necesaria.</p><p>Información de compra: los precios se muestran en FCFA. La disponibilidad y las condiciones de entrega se confirman antes de coordinar el envío.</p><p class="copyright">© ${new Date().getFullYear()} BBR™ · Todos los derechos reservados.</p></div>
+    <div class="footer-founder"><span>Fundador</span><strong>Gabriel Bueriberi</strong></div>
+  </div>`;
 }
 function card(p) {
   return `<article class="card"><a href="producto.html?id=${encodeURIComponent(p.id)}" aria-label="Ver ${p.nombre}"><img src="${p.img}" alt="${p.nombre}" loading="lazy"></a><div><b>${p.nombre}</b><span class="price">${fmt(p.precio)}</span><span class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</span><a class="btn s" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a></div></article>`;
