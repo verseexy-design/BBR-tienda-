@@ -151,3 +151,38 @@ html{scroll-behavior:smooth;scroll-padding-top:82px}
   .products-reveal{opacity:1;transform:none;transition:none}
   .hero-cta span{transition:none}
 }
+
+
+/* Menú móvil BBR y acceso de cuenta en preparación */
+header .header-inner{position:relative;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.menu-toggle{width:42px;height:42px;flex:0 0 42px;border:1px solid #3b3b3b;border-radius:11px;background:#151515;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;transition:background .25s,border-color .25s,transform .25s}
+.menu-toggle span{width:19px;height:2px;background:#f5f5f5;border-radius:2px;transition:transform .28s,opacity .2s,width .25s}
+.menu-toggle:hover{border-color:var(--o);background:#202020}
+.menu-toggle.is-open span:first-child{transform:translateY(7px) rotate(45deg)}
+.menu-toggle.is-open span:nth-child(2){opacity:0;width:8px}
+.menu-toggle.is-open span:last-child{transform:translateY(-7px) rotate(-45deg)}
+.header-logo{margin-right:auto}
+.mobile-menu{position:absolute;z-index:12;left:0;top:calc(100% + 10px);width:min(310px,88vw);padding:20px;background:#111;border:1px solid #343434;border-radius:16px;box-shadow:0 22px 55px rgba(0,0,0,.42);display:flex;flex-direction:column;gap:5px;opacity:0;visibility:hidden;transform:translateY(-10px) scale(.97);transform-origin:top left;transition:opacity .25s ease,transform .3s cubic-bezier(.2,.8,.2,1),visibility .25s}
+.mobile-menu.is-open{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+.menu-heading{display:flex;align-items:center;justify-content:space-between;color:var(--o);font-size:11px;font-weight:800;letter-spacing:.18em;padding:0 2px 12px;border-bottom:1px solid #303030;margin-bottom:5px}
+.menu-close{border:0;background:transparent;color:#aaa;font-size:26px;line-height:1;cursor:pointer}
+.mobile-menu>a{padding:12px 10px;border-radius:9px;color:#eee;font-size:14px;font-weight:600;transition:background .2s,color .2s}
+.mobile-menu>a:hover,.mobile-menu>a.on{background:#242424;color:var(--o)}
+.menu-backdrop{position:fixed;inset:64px 0 0;z-index:8;background:rgba(0,0,0,.25);backdrop-filter:blur(2px)}
+.menu-backdrop[hidden]{display:none}
+body.menu-open{overflow:hidden}
+.login-preview{margin-top:12px;padding:13px 12px;border:1px solid rgba(212,175,55,.65);border-radius:11px;background:linear-gradient(110deg,#d4af37,#f0d77c);color:#101010;font:700 13px Montserrat,sans-serif;display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;transition:transform .25s,box-shadow .25s}
+.login-preview span{font-size:8px;letter-spacing:.1em;opacity:.72}
+.login-preview.login-pulse{animation:loginPulse .82s cubic-bezier(.2,.8,.25,1)}
+@keyframes loginPulse{0%{transform:scale(1)}18%{transform:scale(1.07) rotate(-1deg)}32%{transform:scale(1.09) rotate(1deg)}46%{transform:scale(1.07) rotate(-.7deg)}62%{transform:scale(1.04) rotate(.5deg)}100%{transform:scale(1)}}
+.social-icons a,.social-icons span{width:34px;height:34px;border:1px solid #41464d;border-radius:50%;display:grid;place-items:center;color:#9ca3af;opacity:.88;transition:color .2s,border-color .2s,transform .2s}
+.social-icons a:hover{color:var(--o);border-color:var(--o);transform:translateY(-2px)}
+.social-icons a svg,.social-icons span svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.7}
+.social-icons span:nth-child(2) svg,.social-icons a:last-child svg{fill:currentColor;stroke:none}
+@media(max-width:520px){
+  header .header-inner{height:64px;min-height:64px;flex-wrap:nowrap;padding:0}
+  header .header-inner nav{display:none}
+  .header-logo img{height:34px}
+  .cart{font-size:11px;padding:6px 9px}
+}
+@media(prefers-reduced-motion:reduce){.mobile-menu,.menu-toggle span,.login-preview{transition:none;animation:none!important}}
