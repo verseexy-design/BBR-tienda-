@@ -25,18 +25,18 @@ const PRODUCTS = [{
   img: 'https://s.alicdn.com/@sc04/kf/Hac4924b5c7a746268f81cafca850053fh/Hot-Sale-Medical-Silicone-Magnetic-Anti-Snoring-Nose-Clip-Stopper-Anti-Snore-Device-Man-and-Woman.jpg'
 }, {
   id: 'pasta-dental-herbal-menta',
-  nombre: 'Pasta Dental Herbal Blanqueadora de Menta',
-  desc: 'Pasta dental de uso diario con sabor a menta fresca y fórmula herbal. Presentación de referencia de 120 g. Diseñada para la higiene bucal y el cuidado anticaries; el efecto blanqueador puede variar. Las fotografías son de un producto herbal de menta similar y el envase o la marca pueden ser diferentes al artículo exacto del proveedor.',
+  nombre: 'Pasta Dental Violeta Blanqueadora con Menta',
+  desc: 'Pasta dental de referencia con fórmula violeta y sabor a menta fresca, inspirada en los dentífricos correctores de tono. Las imágenes de envase y comparativas son ilustrativas de productos similares de otras marcas, no del artículo exacto del proveedor. Las fotos de resultados son material promocional de terceros y no garantizan resultados; las pastas violetas suelen producir un efecto óptico temporal al neutralizar visualmente tonos amarillos.',
   precio: 10000,
   stock: true,
   destacado: true,
-  img: 'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste07456402565.jpg',
+  img: 'https://perforacare.com/cdn/shop/files/Purple-Magic-Toothpaste_Listing_Image-1_pack-of-2.jpg?v=1777535890&width=1080',
   images: [
-    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste07456402565.jpg',
-    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste17560701082.jpg',
-    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste18442838588.jpg',
-    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste18443463726.jpg',
-    'https://www.lmzoralcare.com/uploads/202231387/herbal-oral-care-toothpaste18444557919.jpg'
+    'https://perforacare.com/cdn/shop/files/Purple-Magic-Toothpaste_Listing_Image-1_pack-of-2.jpg?v=1777535890&width=1080',
+    'https://uoyou.co.uk/cdn/shop/products/51UR6aOYc-L.jpg?v=1707347711&width=720',
+    'https://m.media-amazon.com/images/I/61jAjxY%2BuDL._SL1500_.jpg',
+    'https://cdn.shopify.com/s/files/1/0727/4820/4308/files/BaspariTeethColorCorrector_07_1024x1024.jpg?v=1684586050',
+    'https://perforacare.com/cdn/shop/files/Purple-Magic-Toothpaste_Listing_Image-3.jpg?v=1777465283&width=1080'
   ]
 }];
 
