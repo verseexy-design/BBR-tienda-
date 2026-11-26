@@ -61,10 +61,16 @@ function head() {
   const link=(href,label,key)=>`<a href="${href}" class="${page===key?'on':''}">${label}</a>`;
   $('#hd').innerHTML=`<div class="w header-inner">
     <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="bbr-menu"><span></span><span></span><span></span></button>
+    <button class="search-toggle" type="button" aria-label="Buscar productos" aria-expanded="false" aria-controls="bbr-search" title="Buscar productos"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button>
     <a class="header-logo" href="index.html" aria-label="BBR, inicio"><img src="logo.png" alt="BBR"></a>
     <nav aria-label="Navegación principal">${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}</nav>
     <a class="cart" href="pedido.html">Mi pedido (${count()})</a><a class="header-profile" id="bbr-header-profile" href="perfil.html" aria-label="Abrir mi perfil"><img id="bbr-header-avatar" alt="Perfil"><span>Mi perfil</span></a>
     <div class="menu-backdrop" hidden></div>
+    <section class="bbr-search-panel" id="bbr-search" hidden aria-label="Buscar productos">
+      <div class="bbr-search-top"><label for="bbr-search-input">BUSCAR EN BBR</label><button class="bbr-search-close" type="button" aria-label="Cerrar búsqueda">×</button></div>
+      <input id="bbr-search-input" type="search" placeholder="¿Qué producto buscas?" autocomplete="off">
+      <div class="bbr-search-results" id="bbr-search-results" aria-live="polite"><p>Escribe para encontrar un producto.</p></div>
+    </section>
     <aside class="mobile-menu" id="bbr-menu" aria-label="Menú BBR" aria-hidden="true">
       <div class="menu-heading"><span>MENÚ BBR</span><button class="menu-close" type="button" aria-label="Cerrar menú">×</button></div>
       ${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}${link('pedido.html','Mi pedido','ped')}
@@ -76,7 +82,24 @@ function head() {
   const setOpen=open=>{toggle.classList.toggle('is-open',open);toggle.setAttribute('aria-expanded',String(open));menu.classList.toggle('is-open',open);menu.setAttribute('aria-hidden',String(!open));backdrop.hidden=!open;document.body.classList.toggle('menu-open',open);};
   toggle.onclick=()=>setOpen(!menu.classList.contains('is-open'));
   close.onclick=()=>setOpen(false);backdrop.onclick=()=>setOpen(false);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')setOpen(false);});
+  const searchButton=$('.search-toggle'),searchPanel=$('#bbr-search'),searchInput=$('#bbr-search-input'),searchResults=$('#bbr-search-results'),searchClose=$('.bbr-search-close');
+  const closeSearch=()=>{searchPanel.classList.remove('is-open');searchButton.classList.remove('is-active');searchButton.setAttribute('aria-expanded','false');setTimeout(()=>{if(!searchPanel.classList.contains('is-open'))searchPanel.hidden=true;},260);};
+  const showSearchResults=value=>{
+    const term=value.trim().toLocaleLowerCase('es');
+    if(!term){searchResults.innerHTML='<p>Escribe para encontrar un producto.</p>';return;}
+    const matches=PRODUCTS.filter(p=>(p.nombre+' '+p.desc).toLocaleLowerCase('es').includes(term));
+    searchResults.innerHTML=matches.length?matches.map(p=>`<a class="bbr-search-result" href="producto.html?id=${encodeURIComponent(p.id)}"><img src="${p.img}" alt=""><span><b>${p.nombre}</b><small>${fmt(p.precio)}</small></span><i>↗</i></a>`).join(''):'<p>No encontramos productos con ese nombre.</p>';
+  };
+  searchButton.onclick=()=>{
+    setOpen(false);
+    const opening=searchPanel.hidden;
+    if(opening){searchPanel.hidden=false;requestAnimationFrame(()=>searchPanel.classList.add('is-open'));searchButton.classList.add('is-active');searchButton.setAttribute('aria-expanded','true');setTimeout(()=>searchInput.focus(),100);}
+    else closeSearch();
+  };
+  searchInput.addEventListener('input',()=>showSearchResults(searchInput.value));
+  searchClose.onclick=closeSearch;
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){setOpen(false);closeSearch();}});
+
 
 }
 function foot() {
@@ -125,7 +148,8 @@ function productPage() {
   let q=1;
   const gallery = p.id==='clip-antirronquidos-silicona' ? ["https://s.alicdn.com/@sc04/kf/H7b323db107114fd6bbdbc010ecbdb13aq.png","https://s.alicdn.com/@sc04/kf/Hae6ee1bca6884f4b967d50341a13c9a6R.png","https://s.alicdn.com/@sc04/kf/H7970336026b24ab59f852d0f14fe5377i.png","https://s.alicdn.com/@sc04/kf/H0ff63c661819404daead0e68017d2a44H.png","https://s.alicdn.com/@sc04/kf/H413f98171da14a75bc6b3c81cb51061de.jpg","https://s.alicdn.com/@sc04/kf/H9e4b647909f8466abeb9c14fc1a47609t.jpg"] : [p.img];
   const galleryMarkup = gallery.length>1 ? '<div class="bbr-gallery"><div class="bbr-gallery-track" id="bbr-gallery-track">'+gallery.map((src,i)=>'<figure class="bbr-gallery-slide"><img src="'+src+'" alt="'+p.nombre+' · imagen '+(i+1)+'" loading="'+(i===0?'eager':'lazy')+'"></figure>').join('')+'</div><div class="bbr-gallery-bottom"><span class="bbr-gallery-count" id="bbr-gallery-count">01 / 06</span><div class="bbr-gallery-dots">'+gallery.map((_,i)=>'<button type="button" data-gallery-dot="'+i+'" aria-label="Ver imagen '+(i+1)+'" class="'+(i===0?'active':'')+'"></button>').join('')+'</div><span class="bbr-gallery-hint">DESLIZA PARA VER MÁS ↔</span></div></div>' : '<div class="frame"><img src="'+p.img+'" alt="'+p.nombre+'"></div>';
-  mount.innerHTML=`${galleryMarkup}<div><h1 class="product-title">${p.nombre}</h1><p class="price">${fmt(p.precio)}</p><p class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</p><p class="lead product-desc">${p.desc}</p><p class="label-inline">Cantidad</p><div class="qty" id="q"></div><p class="tot" id="t"></p><div class="acts"><button class="btn s" id="a" ${p.stock?'':'disabled'}>Añadir al pedido</button><button class="btn" id="r" ${p.stock?'':'disabled'}>Continuar al pedido</button><button class="share-btn detail-share" type="button" data-share="${p.id}">↗ Compartir producto</button></div><p class="mut" id="m" role="status"></p></div>`;
+  mount.innerHTML=`<div class="product-back-row"><button class="product-back-btn" type="button" id="bbr-product-back"><span aria-hidden="true">←</span> Volver atrás</button></div>${galleryMarkup}<div><h1 class="product-title">${p.nombre}</h1><p class="price">${fmt(p.precio)}</p><p class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</p><p class="lead product-desc">${p.desc}</p><p class="label-inline">Cantidad</p><div class="qty" id="q"></div><p class="tot" id="t"></p><div class="acts"><button class="btn s" id="a" ${p.stock?'':'disabled'}>Añadir al pedido</button><button class="btn" id="r" ${p.stock?'':'disabled'}>Continuar al pedido</button><button class="share-btn detail-share" type="button" data-share="${p.id}">↗ Compartir producto</button></div><p class="mut" id="m" role="status"></p></div>`;
+  $('#bbr-product-back').onclick=()=>{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1)history.back();else location.href='catalogo.html';};
   if(gallery.length>1){const track=$('#bbr-gallery-track'),count=$('#bbr-gallery-count'),dots=[...mount.querySelectorAll('[data-gallery-dot]')];const sync=()=>{const i=Math.max(0,Math.min(gallery.length-1,Math.round(track.scrollLeft/track.clientWidth)));count.textContent=String(i+1).padStart(2,'0')+' / '+String(gallery.length).padStart(2,'0');dots.forEach((d,n)=>d.classList.toggle('active',n===i));};track.addEventListener('scroll',()=>requestAnimationFrame(sync),{passive:true});dots.forEach(d=>d.addEventListener('click',()=>track.scrollTo({left:Number(d.dataset.galleryDot)*track.clientWidth,behavior:'smooth'})));}
   const updateTotal=()=>{$('#t').textContent=`Subtotal: ${fmt(p.precio*q)}`;};
   qtyBox($('#q'),()=>q,v=>{q=v;updateTotal();});updateTotal();
