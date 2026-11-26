@@ -186,3 +186,7 @@ body.menu-open{overflow:hidden}
   .cart{font-size:11px;padding:6px 9px}
 }
 @media(prefers-reduced-motion:reduce){.mobile-menu,.menu-toggle span,.login-preview{transition:none;animation:none!important}}
+
+
+/* BBR - cuenta de cliente Firebase */
+.account-wrap{max-width:520px;margin:0 auto}.account-card{background:#171717;border:1px solid #39332a;border-radius:16px;padding:24px;box-shadow:0 16px 40px rgba(0,0,0,.2)}.account-card h1{font-size:30px;margin:0 0 8px}.account-sub{color:#a7a7a7;font-size:13px;margin-bottom:20px}.account-card label{margin-top:14px}.account-card input{margin-top:5px}.account-card .btn{width:100%;margin-top:18px}.account-switch{margin-top:20px;text-align:center;color:#b9b9b9;font-size:13px}.account-switch button,.account-link{background:none;border:0;color:var(--o);font:600 13px Montserrat,sans-serif;text-decoration:underline;cursor:pointer;padding:0}.account-message{font-size:13px;line-height:1.7;margin-top:14px;color:#ddd}.account-message.error{color:#ff8989}.account-message.success{color:#8ce09a}.account-status{border:1px solid #4b4024;background:#211d12;padding:16px;border-radius:12px;margin-top:18px}.account-status strong{color:var(--o)}.account-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.account-actions .btn{width:auto;margin:0}.account-hidden{display:none!important}.account-small{font-size:11px;color:#858b95;margin-top:16px;line-height:1.7}
