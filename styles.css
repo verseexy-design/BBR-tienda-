@@ -355,3 +355,14 @@ body[data-page="profile"] main:after{content:"✦  GLITCH CULTURE  ✦  BBR  ✦
 @keyframes productPop{from{opacity:0;transform:translateY(25px) scale(.975);filter:blur(4px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
 @media(max-width:420px){.card-actions{flex-direction:column}.card-actions .btn,.card-actions .share-btn{width:100%;min-height:43px}}
 @media(prefers-reduced-motion:reduce){.product-card,.card-image-link img,.product-card:before,.share-btn{animation:none!important;transition:none!important}}
+
+
+/* BBR product launch: productos destacados visibles al entrar */
+.featured-section{padding:34px 0 42px;background:radial-gradient(ellipse at 8% 0%,rgba(212,175,55,.13),transparent 38%),linear-gradient(135deg,#f7f6f1,#eeeee8)}
+.featured-section:before{content:"NOVEDADES BBR";display:block;width:min(1100px,92%);margin:0 auto 10px;color:#9b761b;font-size:10px;font-weight:900;letter-spacing:.24em}
+.featured-section h2{font-size:clamp(23px,4.8vw,36px);margin-bottom:20px;letter-spacing:-.04em}
+.featured-section .product-card{box-shadow:0 12px 34px rgba(20,20,20,.09);border-radius:18px}
+.featured-section .product-card:after{content:"DESTACADO";position:absolute;z-index:3;top:12px;left:12px;padding:7px 10px;border-radius:7px;background:#171717;color:#f3d77e;font:800 9px Montserrat,sans-serif;letter-spacing:.12em;pointer-events:none}
+.product-card.is-tapped{transform:scale(.975) translateY(-3px);box-shadow:0 0 0 2px rgba(212,175,55,.65),0 15px 35px rgba(0,0,0,.2)}
+@media(hover:none){.product-card:active{transform:scale(.975)}.product-card .card-image-link img{transition:transform .35s ease}.product-card:active .card-image-link img{transform:scale(1.045)}}
+@media(prefers-reduced-motion:reduce){.product-card.is-tapped{transform:none}}
