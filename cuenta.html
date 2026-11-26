@@ -6,7 +6,7 @@
 <link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261126-5">
+<link rel="stylesheet" href="styles.css?v=20261126-6">
 </head>
 <body data-page="account">
 <header id="hd"></header>
@@ -37,8 +37,8 @@
 </div>
 </div>
 <div id="account-status" class="account-status account-hidden">
-<h1>Mi cuenta</h1><p class="account-sub">Has iniciado sesión en BBR.</p>
-<p>Hola, <strong id="customer-name"></strong></p><p id="verify-note" class="account-message"></p>
+<div class="profile-top"><div><p class="eyebrow">TU ESPACIO BBR</p><h1>Mi cuenta</h1><p class="account-sub">Gestiona tu perfil y tus datos de cliente.</p></div><label class="profile-avatar-control" for="profile-photo" title="Cambiar foto de perfil"><img id="profile-avatar" alt="Foto de perfil"><span>＋</span></label><input id="profile-photo" type="file" accept="image/*" hidden></div>
+<p>Hola, <strong id="customer-name"></strong></p><p class="profile-hint">Pulsa tu foto para cambiarla. La imagen se guarda en este navegador.</p><p id="verify-note" class="account-message"></p>
 <div class="account-actions"><a class="btn s" href="catalogo.html">VER PRODUCTOS</a><button class="btn" id="logout" type="button">CERRAR SESIÓN</button></div>
 </div>
 <p id="account-message" class="account-message" role="status" aria-live="polite"></p>
@@ -100,11 +100,35 @@ $("forgot-password").onclick=async()=>{
  catch(error){showMessage(friendlyError(error),"error");}
 };
 $("logout").onclick=async()=>{try{await signOut(auth);showMessage("Has cerrado sesión correctamente.","success");}catch(error){showMessage(friendlyError(error),"error");}};
+const avatarKey = uid => "bbr_profile_photo_"+uid;
+const renderAvatar = user => {
+ const image=$("profile-avatar"), saved=localStorage.getItem(avatarKey(user.uid));
+ image.src=saved||user.photoURL||"https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png";
+};
+$("profile-photo").addEventListener("change",event=>{
+ const file=event.target.files && event.target.files[0]; if(!file)return;
+ if(!file.type.startsWith("image/")){showMessage("Selecciona una imagen válida.","error");return;}
+ if(file.size>8*1024*1024){showMessage("La foto debe pesar menos de 8 MB.","error");return;}
+ const reader=new FileReader();
+ reader.onload=()=>{
+  const img=new Image();
+  img.onload=()=>{
+   const canvas=document.createElement("canvas"),size=320;canvas.width=size;canvas.height=size;
+   const ctx=canvas.getContext("2d"),scale=Math.max(size/img.width,size/img.height),w=img.width*scale,h=img.height*scale;
+   ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
+   const data=canvas.toDataURL("image/jpeg",.78);
+   try{localStorage.setItem(avatarKey(auth.currentUser.uid),data);renderAvatar(auth.currentUser);showMessage("Foto de perfil actualizada.","success");}
+   catch(e){showMessage("No hay espacio suficiente para guardar la foto. Prueba con otra imagen más pequeña.","error");}
+  };
+  img.onerror=()=>showMessage("No se pudo abrir esa imagen.","error");img.src=reader.result;
+ };
+ reader.readAsDataURL(file);
+});
 onAuthStateChanged(auth,user=>{
  if(user && !user.emailVerified){ signOut(auth); forms.classList.remove("account-hidden"); status.classList.add("account-hidden"); return; }
  if(user){
   forms.classList.add("account-hidden");status.classList.remove("account-hidden");
-  $("customer-name").textContent=user.displayName||user.email;
+  $("customer-name").textContent=user.displayName||user.email; renderAvatar(user);
   $("verify-note").textContent=user.emailVerified?"Tu correo electrónico está verificado.":"Aún debes verificar tu correo. Busca el mensaje de verificación que te enviamos.";
  }else{forms.classList.remove("account-hidden");status.classList.add("account-hidden");}
 });
