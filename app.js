@@ -17,7 +17,7 @@ const PRODUCTS = [{
   img: 'https://media.adeo.com/mkp/3922a8d2db55aaf253f196e776a9971a/media.jpg?fit=bounds&format=jpg&height=800&quality=85&width=800'
 }, {
   id: 'clip-antirronquidos-silicona',
-  nombre: 'Clip Antirronquidos Magnético de Silicona',
+  nombre: 'Dispositivo Antirronquidos de Silicona con Clip Magnético Nasal',
   desc: 'Clip nasal reutilizable de silicona con extremos magnéticos, diseñado como accesorio de apoyo para el descanso. Incluye una presentación compacta y fácil de guardar. La eficacia puede variar según la persona; no diagnostica ni trata la apnea del sueño.',
   precio: 6000,
   stock: true,
