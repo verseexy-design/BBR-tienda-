@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi cuenta | BBR</title><meta name="description" content="Crea tu cuenta o inicia sesión en BBR.">
+<link rel="icon" href="logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20261126-3">
+</head>
+<body data-page="account">
+<header id="hd"></header>
+<main><section><div class="w account-wrap">
+<div class="account-card">
+<p class="eyebrow">ÁREA DE CLIENTES BBR</p>
+<div id="auth-forms">
+<div id="register-view">
+<h1>Crea tu cuenta</h1><p class="account-sub">Regístrate para tener tu espacio de cliente en BBR.</p>
+<form id="register-form">
+<label for="register-name">Nombre que se mostrará</label><input id="register-name" type="text" autocomplete="name" maxlength="60" required>
+<label for="register-email">Correo electrónico</label><input id="register-email" type="email" autocomplete="email" required>
+<label for="register-password">Contraseña</label><input id="register-password" type="password" autocomplete="new-password" minlength="6" required>
+<button class="btn" type="submit">CREAR CUENTA</button>
+</form>
+<p class="account-switch">¿Ya tienes una cuenta en BBR? <button id="show-login" type="button">Pulsa aquí para iniciar sesión</button></p>
+</div>
+<div id="login-view" class="account-hidden">
+<h1>Bienvenido de nuevo</h1><p class="account-sub">Inicia sesión en tu cuenta BBR.</p>
+<form id="login-form">
+<label for="login-email">Correo electrónico</label><input id="login-email" type="email" autocomplete="email" required>
+<label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required>
+<button class="btn" type="submit">INICIAR SESIÓN</button>
+</form>
+<p class="account-switch"><button id="forgot-password" type="button">¿Has olvidado tu contraseña?</button></p>
+<p class="account-switch">¿Aún no tienes cuenta? <button id="show-register" type="button">Crear una cuenta</button></p>
+</div>
+</div>
+<div id="account-status" class="account-status account-hidden">
+<h1>Mi cuenta</h1><p class="account-sub">Has iniciado sesión en BBR.</p>
+<p>Hola, <strong id="customer-name"></strong></p><p id="verify-note" class="account-message"></p>
+<div class="account-actions"><a class="btn s" href="catalogo.html">VER PRODUCTOS</a><button class="btn" id="logout" type="button">CERRAR SESIÓN</button></div>
+</div>
+<p id="account-message" class="account-message" role="status" aria-live="polite"></p>
+<p class="account-small">Tu cuenta utiliza Firebase Authentication para gestionar el acceso. Puedes explorar los productos y realizar pedidos sin registrarte.</p>
+</div>
+</div></section></main>
+<footer id="ft"></footer>
+<script src="app.js?v=20261126-3"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import { getAuth, setPersistence, browserLocalPersistence, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, sendEmailVerification, sendPasswordResetEmail, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAY--0sITaphFA-KnCXmDflt8u3jdZkJ5g",
+  authDomain: "bbr-shop-bb00f.firebaseapp.com",
+  projectId: "bbr-shop-bb00f",
+  storageBucket: "bbr-shop-bb00f.firebasestorage.app",
+  messagingSenderId: "967839070632",
+  appId: "1:967839070632:web:bc14902b6abb0f4922059d"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const $ = id => document.getElementById(id);
+const forms = $("auth-forms"), status = $("account-status"), message = $("account-message");
+const showMessage = (text,kind="") => { message.textContent=text; message.className="account-message"+(kind?" "+kind:""); };
+const friendlyError = error => ({
+ "auth/email-already-in-use":"Ese correo ya tiene una cuenta. Inicia sesión.",
+ "auth/invalid-email":"El correo electrónico no tiene un formato válido.",
+ "auth/weak-password":"La contraseña debe tener al menos 6 caracteres.",
+ "auth/invalid-credential":"Correo o contraseña incorrectos.",
+ "auth/user-not-found":"No encontramos una cuenta con ese correo.",
+ "auth/wrong-password":"La contraseña no es correcta.",
+ "auth/too-many-requests":"Demasiados intentos. Espera un momento y vuelve a probar.",
+ "auth/network-request-failed":"No se pudo conectar. Comprueba tu conexión a Internet.",
+ "auth/operation-not-allowed":"El acceso por correo y contraseña aún no está habilitado en Firebase."
+}[error.code] || "No se pudo completar la operación. Revisa los datos e inténtalo de nuevo.");
+await setPersistence(auth,browserLocalPersistence);
+$("show-login").onclick=()=>{ $("register-view").classList.add("account-hidden"); $("login-view").classList.remove("account-hidden"); showMessage(""); };
+$("show-register").onclick=()=>{ $("login-view").classList.add("account-hidden"); $("register-view").classList.remove("account-hidden"); showMessage(""); };
+$("register-form").addEventListener("submit",async e=>{
+ e.preventDefault(); const name=$("register-name").value.trim(),email=$("register-email").value.trim(),password=$("register-password").value;
+ if(!name){showMessage("Escribe el nombre que quieres mostrar.","error");return;}
+ showMessage("Creando tu cuenta…");
+ try { const credential=await createUserWithEmailAndPassword(auth,email,password); await updateProfile(credential.user,{displayName:name}); await sendEmailVerification(credential.user); showMessage("Cuenta creada. Te hemos enviado un correo para verificar tu dirección. Revisa también la carpeta de spam.","success"); }
+ catch(error){showMessage(friendlyError(error),"error");}
+});
+$("login-form").addEventListener("submit",async e=>{
+ e.preventDefault(); showMessage("Iniciando sesión…");
+ try { await signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value); showMessage("Sesión iniciada correctamente.","success"); }
+ catch(error){showMessage(friendlyError(error),"error");}
+});
+$("forgot-password").onclick=async()=>{
+ const email=$("login-email").value.trim();
+ if(!email){showMessage("Escribe primero tu correo electrónico en el campo de arriba.","error");return;}
+ try{await sendPasswordResetEmail(auth,email);showMessage("Te hemos enviado un enlace para restablecer tu contraseña. Revisa tu correo.","success");}
+ catch(error){showMessage(friendlyError(error),"error");}
+};
+$("logout").onclick=async()=>{try{await signOut(auth);showMessage("Has cerrado sesión correctamente.","success");}catch(error){showMessage(friendlyError(error),"error");}};
+onAuthStateChanged(auth,user=>{
+ if(user){
+  forms.classList.add("account-hidden");status.classList.remove("account-hidden");
+  $("customer-name").textContent=user.displayName||user.email;
+  $("verify-note").textContent=user.emailVerified?"Tu correo electrónico está verificado.":"Aún debes verificar tu correo. Busca el mensaje de verificación que te enviamos.";
+ }else{forms.classList.remove("account-hidden");status.classList.add("account-hidden");}
+});
+</script>
+</body></html>
