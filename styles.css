@@ -190,3 +190,50 @@ body.menu-open{overflow:hidden}
 
 /* BBR - cuenta de cliente Firebase */
 .account-wrap{max-width:520px;margin:0 auto}.account-card{background:#171717;border:1px solid #39332a;border-radius:16px;padding:24px;box-shadow:0 16px 40px rgba(0,0,0,.2)}.account-card h1{font-size:30px;margin:0 0 8px}.account-sub{color:#a7a7a7;font-size:13px;margin-bottom:20px}.account-card label{margin-top:14px}.account-card input{margin-top:5px}.account-card .btn{width:100%;margin-top:18px}.account-switch{margin-top:20px;text-align:center;color:#b9b9b9;font-size:13px}.account-switch button,.account-link{background:none;border:0;color:var(--o);font:600 13px Montserrat,sans-serif;text-decoration:underline;cursor:pointer;padding:0}.account-message{font-size:13px;line-height:1.7;margin-top:14px;color:#ddd}.account-message.error{color:#ff8989}.account-message.success{color:#8ce09a}.account-status{border:1px solid #4b4024;background:#211d12;padding:16px;border-radius:12px;margin-top:18px}.account-status strong{color:var(--o)}.account-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.account-actions .btn{width:auto;margin:0}.account-hidden{display:none!important}.account-small{font-size:11px;color:#858b95;margin-top:16px;line-height:1.7}
+
+
+/* BBR cuenta: identidad tropical ecuatorial, aislada del diseño de la tienda */
+body[data-page="account"] main{background:linear-gradient(145deg,#f5f1e8 0%,#e8f0e8 52%,#f7f2e8 100%);color:#173b32;min-height:72vh;overflow:hidden}
+body[data-page="account"] main section{padding:58px 0 76px}
+body[data-page="account"] .account-wrap{max-width:590px;position:relative}
+body[data-page="account"] .account-scene{position:relative;padding:30px 0 20px}
+body[data-page="account"] .account-card{position:relative;z-index:2;background:rgba(255,255,255,.94);color:#173b32;border:1px solid rgba(17,88,66,.15);border-radius:24px;padding:30px;box-shadow:0 24px 70px rgba(22,67,52,.13);backdrop-filter:blur(10px)}
+body[data-page="account"] .account-card h1{color:#143f32;font-size:clamp(27px,5vw,34px);letter-spacing:-.04em}
+body[data-page="account"] .account-card .eyebrow{color:#b58b3a;letter-spacing:.16em}
+body[data-page="account"] .account-sub,body[data-page="account"] .account-small{color:#74877d}
+body[data-page="account"] .account-card label{color:#244c3f;font-size:12px}
+body[data-page="account"] .account-card input{background:#f7f8f4;color:#173b32;border:1px solid #dce5dc;border-radius:12px;padding:14px 90px 14px 14px}
+body[data-page="account"] .account-card input:focus{border-color:#39856b;box-shadow:0 0 0 3px rgba(57,133,107,.1)}
+body[data-page="account"] .account-card .btn{background:#17664f;color:#fff;border-radius:12px;box-shadow:0 8px 18px rgba(23,102,79,.16);letter-spacing:.04em}
+body[data-page="account"] .account-card .btn:hover{background:#0f513e;box-shadow:0 12px 24px rgba(23,102,79,.22)}
+body[data-page="account"] .account-card .btn.s{background:transparent;color:#17664f;border-color:#17664f;box-shadow:none}
+body[data-page="account"] .account-switch{color:#718279}
+body[data-page="account"] .account-switch button,body[data-page="account"] .account-link{color:#17664f;font-weight:800}
+body[data-page="account"] .account-message{color:#49685b}
+body[data-page="account"] .account-message.error{color:#b4473e}
+body[data-page="account"] .account-message.success{color:#17664f}
+body[data-page="account"] .account-status{background:#eff7f0;border:1px solid #d4e6d8;border-radius:15px;color:#173b32}
+body[data-page="account"] .account-status strong{color:#17664f}
+.password-field{position:relative}
+.password-field input{padding-right:88px!important}
+.password-toggle{position:absolute;right:9px;top:50%;transform:translateY(-50%);border:0;border-radius:8px;padding:7px 10px;background:#e7efe8;color:#17664f;font:700 11px Montserrat,sans-serif;cursor:pointer}
+.password-toggle:hover{background:#d7e8da}
+.account-emblem{display:flex;align-items:center;justify-content:center;gap:10px;margin:0 auto 18px;width:max-content;color:#547365;font-size:8px;font-weight:800;letter-spacing:.13em;line-height:1.45}
+.emblem-shield{width:42px;height:46px;display:grid;place-items:center;clip-path:polygon(50% 0,100% 13%,92% 72%,50% 100%,8% 72%,0 13%);background:linear-gradient(90deg,#278b57 0 33%,#fff 33% 66%,#d84b43 66%);font-size:20px;filter:drop-shadow(0 3px 5px rgba(0,0,0,.15))}
+.tropical-palm{position:absolute;z-index:3;font-size:52px;filter:drop-shadow(0 8px 8px rgba(26,68,49,.14));pointer-events:none;animation:palmDrift 5.5s ease-in-out infinite}
+.palm-one{left:-24px;top:4px;transform:rotate(-12deg)}
+.palm-two{right:-24px;bottom:0;transform:rotate(12deg);animation-delay:-2.5s}
+.float-badge{position:absolute;z-index:4;padding:9px 13px;border:1px solid rgba(255,255,255,.8);border-radius:999px;background:rgba(255,255,255,.88);box-shadow:0 8px 24px rgba(24,69,51,.1);color:#28634d;font-size:9px;font-weight:800;letter-spacing:.08em;white-space:nowrap;animation:badgeFloat 4.5s ease-in-out infinite}
+.badge-one{top:-5px;right:8%;animation-delay:-1s}
+.badge-two{bottom:3px;left:3%;animation-delay:-2.4s}
+.badge-three{top:42%;right:-48px;animation-delay:-3.2s}
+@keyframes badgeFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-10px) rotate(2deg)}}
+@keyframes palmDrift{0%,100%{translate:0 0;rotate:-3deg}50%{translate:0 -9px;rotate:3deg}}
+body[data-page="account"] footer{background:#0b0b0b}
+@media(max-width:600px){
+ body[data-page="account"] main section{padding:34px 0 52px}
+ body[data-page="account"] .account-card{padding:23px 18px;border-radius:19px}
+ .tropical-palm{font-size:38px}.palm-one{left:-9px}.palm-two{right:-8px}
+ .badge-one{right:2%;top:-13px}.badge-two{left:0;bottom:-2px}.badge-three{right:-6px;top:48%;font-size:8px}
+}
+@media(prefers-reduced-motion:reduce){.tropical-palm,.float-badge{animation:none!important}}
