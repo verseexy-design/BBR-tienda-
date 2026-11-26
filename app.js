@@ -47,7 +47,7 @@ function head() {
     <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="bbr-menu"><span></span><span></span><span></span></button>
     <a class="header-logo" href="index.html" aria-label="BBR, inicio"><img src="logo.png" alt="BBR"></a>
     <nav aria-label="Navegación principal">${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}</nav>
-    <a class="cart" href="pedido.html">Mi pedido (${count()})</a>
+    <a class="cart" href="pedido.html">Mi pedido (${count()})</a><a class="header-profile" id="bbr-header-profile" href="cuenta.html" aria-label="Mi perfil" hidden><img id="bbr-header-avatar" alt=""></a>
     <div class="menu-backdrop" hidden></div>
     <aside class="mobile-menu" id="bbr-menu" aria-label="Menú BBR" aria-hidden="true">
       <div class="menu-heading"><span>MENÚ BBR</span><button class="menu-close" type="button" aria-label="Cerrar menú">×</button></div>
@@ -55,6 +55,7 @@ function head() {
       <a class="login-preview" href="cuenta.html">Mi cuenta <span>REGISTRO / ACCESO</span></a>
     </aside>
   </div>`;
+  import('./bbr-auth-ui.js').catch(()=>{});
   const toggle=$('.menu-toggle'),menu=$('.mobile-menu'),backdrop=$('.menu-backdrop'),close=$('.menu-close');
   const setOpen=open=>{toggle.classList.toggle('is-open',open);toggle.setAttribute('aria-expanded',String(open));menu.classList.toggle('is-open',open);menu.setAttribute('aria-hidden',String(!open));backdrop.hidden=!open;document.body.classList.toggle('menu-open',open);};
   toggle.onclick=()=>setOpen(!menu.classList.contains('is-open'));
