@@ -22,7 +22,7 @@ function setupBBRDatabase() {
 
 function configurarClaveBBRView() {
   const pin = Browser.inputBox('BBR View', 'Escribe la nueva clave privada de administrador:', Browser.Buttons.OK_CANCEL);
-  if (pin === 'cancel' || !/^\\d{6}$/.test(pin)) throw new Error('La clave debe tener exactamente 6 números.');
+  if (pin === 'cancel' || !/^\d{6}$/.test(pin)) throw new Error('La clave debe tener exactamente 6 números.');
   PropertiesService.getScriptProperties().setProperty('BBR_ADMIN_PIN', pin);
   return 'Clave de BBR View guardada.';
 }
@@ -77,11 +77,11 @@ function getActivitySheet_() {
 function parseOrderEmail_(message) {
   const body = message.getPlainBody();
   const field = label => {
-    const re = new RegExp('(?:^|\\\\n)'+label+':\\\\s*([^\\\\n]*)','i');
+    const re = new RegExp('(?:^|\\n)'+label+':\\s*([^\\n]*)','i');
     const match = body.match(re);
     return match ? match[1].trim() : '';
   };
-  const amountText = field('IMPORTE SOLICITADO').replace(/[^0-9]/g,'');
+  const amountText = field('IMPORTE DEL PEDIDO').replace(/[^0-9]/g,'');
   const quantity = Number(field('CANTIDAD')) || 0;
   return {
     id: field('CÓDIGO') || message.getId(),
