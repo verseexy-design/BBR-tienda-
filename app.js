@@ -43,16 +43,34 @@ function add(id,q) {
 function head() {
   const page=document.body.dataset.page;
   const link=(href,label,key)=>`<a href="${href}" class="${page===key?'on':''}">${label}</a>`;
-  $('#hd').innerHTML=`<div class="w"><a href="index.html" aria-label="BBR, inicio"><img src="logo.png" alt="BBR"></a><nav aria-label="Navegación principal">${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}</nav><a class="cart" href="pedido.html">Mi pedido (${count()})</a></div>`;
+  $('#hd').innerHTML=`<div class="w header-inner">
+    <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="bbr-menu"><span></span><span></span><span></span></button>
+    <a class="header-logo" href="index.html" aria-label="BBR, inicio"><img src="logo.png" alt="BBR"></a>
+    <nav aria-label="Navegación principal">${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}</nav>
+    <a class="cart" href="pedido.html">Mi pedido (${count()})</a>
+    <div class="menu-backdrop" hidden></div>
+    <aside class="mobile-menu" id="bbr-menu" aria-label="Menú BBR" aria-hidden="true">
+      <div class="menu-heading"><span>MENÚ BBR</span><button class="menu-close" type="button" aria-label="Cerrar menú">×</button></div>
+      ${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}${link('pedido.html','Mi pedido','ped')}
+      <button class="login-preview" type="button">Iniciar sesión <span>PRÓXIMAMENTE</span></button>
+    </aside>
+  </div>`;
+  const toggle=$('.menu-toggle'),menu=$('.mobile-menu'),backdrop=$('.menu-backdrop'),close=$('.menu-close');
+  const setOpen=open=>{toggle.classList.toggle('is-open',open);toggle.setAttribute('aria-expanded',String(open));menu.classList.toggle('is-open',open);menu.setAttribute('aria-hidden',String(!open));backdrop.hidden=!open;document.body.classList.toggle('menu-open',open);};
+  toggle.onclick=()=>setOpen(!menu.classList.contains('is-open'));
+  close.onclick=()=>setOpen(false);backdrop.onclick=()=>setOpen(false);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')setOpen(false);});
+  const login=$('.login-preview');
+  login.onclick=()=>{login.classList.remove('login-pulse');void login.offsetWidth;login.classList.add('login-pulse');login.querySelector('span').textContent='MUY PRONTO';window.setTimeout(()=>login.classList.remove('login-pulse'),850);};
 }
 function foot() {
   $('#ft').innerHTML=`<div class="w footer-grid">
     <div class="footer-brand"><img src="logo.png" alt="BBR"><p>Soluciones inteligentes. Una vida mejor. 🇬🇶</p><p class="footer-location">Guinea Ecuatorial · Atención online</p></div>
     <div class="footer-info"><b>Pedidos y delivery</b><p>Realiza tu pedido en la web. Nos pondremos en contacto contigo para confirmar disponibilidad, ubicación y detalles de entrega.</p><p>La cobertura, el plazo y el coste se confirman según la zona.</p></div>
-    <div class="footer-social"><b>Conecta con BBR</b><p class="social-soon">Nuestras redes sociales estarán disponibles próximamente.</p><div class="social-icons" aria-label="Redes sociales próximamente">
-      <span title="Instagram próximamente" aria-label="Instagram próximamente"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></span>
+    <div class="footer-social"><b>Conecta con BBR</b><p class="social-soon">Síguenos y descubre las novedades de BBR.</p><div class="social-icons" aria-label="Redes sociales próximamente">
+      <a href="https://www.instagram.com/bbr.shopping/" target="_blank" rel="noopener noreferrer" title="Instagram BBR" aria-label="Instagram BBR"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="1"></circle></svg></span>
       <span title="Facebook próximamente" aria-label="Facebook próximamente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 21v-8h3l.5-4H14V7c0-1.2.4-2 2-2h1.7V1.4C17 1.2 15.8 1 14.4 1 11 1 9 3 9 6.7V9H6v4h3v8z"></path></svg></span>
-      <span title="TikTok próximamente" aria-label="TikTok próximamente"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v11.2a4.1 4.1 0 1 1-3.5-4.05V6.6a7.5 7.5 0 1 0 7 7.45V9.8a9 9 0 0 0 4 1V7.2c-3.2-.1-5.8-1.8-7.5-4.2z"></path></svg></span>
+      <a href="https://www.tiktok.com/@tudoctor.tv" target="_blank" rel="noopener noreferrer" title="TikTok" aria-label="TikTok BBR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v11.2a4.1 4.1 0 1 1-3.5-4.05V6.6a7.5 7.5 0 1 0 7 7.45V9.8a9 9 0 0 0 4 1V7.2c-3.2-.1-5.8-1.8-7.5-4.2z"></path></svg></span>
       </div></div>
     <div class="footer-legal"><p>Privacidad: utilizamos los datos facilitados únicamente para gestionar tu solicitud, contactar contigo y coordinar el pedido y su entrega. No envíes información personal que no sea necesaria.</p><p>Información de compra: los precios se muestran en FCFA. La disponibilidad y las condiciones de entrega se confirman antes de coordinar el envío.</p><p class="copyright">© ${new Date().getFullYear()} BBR™ · Todos los derechos reservados.</p></div>
     <div class="footer-founder"><span>Fundador</span><strong>Gabriel Bueriberi</strong></div>
