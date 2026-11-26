@@ -93,7 +93,8 @@ function foot() {
   </div>`;
 }
 function card(p) {
-  return `<article class="card product-card"><a class="card-image-link" href="producto.html?id=${encodeURIComponent(p.id)}" aria-label="Ver ${p.nombre}"><img src="${p.img}" alt="${p.nombre}" loading="lazy"></a><div><b>${p.nombre}</b><span class="price">${fmt(p.precio)}</span><span class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</span><div class="card-actions"><a class="btn s" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a><button class="share-btn" type="button" data-share="${p.id}" aria-label="Compartir ${p.nombre}" title="Compartir producto">↗ Compartir</button></div></div></article>`;
+  const accent = p.id==='desodorante-lanemay' ? '#D4AF37' : p.id==='repelente-electronico-ultrasonico' ? '#42B883' : '#E16B91';
+  return `<article class="card product-card" data-product="${p.id}" style="--product-accent:${accent}"><a class="card-image-link" href="producto.html?id=${encodeURIComponent(p.id)}" aria-label="Ver ${p.nombre}"><img src="${p.img}" alt="${p.nombre}" loading="lazy"></a><div><b>${p.nombre}</b><span class="price">${fmt(p.precio)}</span><span class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</span><div class="card-actions"><a class="btn s" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a><button class="share-btn" type="button" data-share="${p.id}" aria-label="Compartir ${p.nombre}" title="Compartir producto">↗ Compartir</button></div></div></article>`;
 }
 async function shareProduct(id,button) {
   const p=prod(id); if(!p)return;
@@ -113,6 +114,10 @@ function qtyBox(el,get,set,min=1) {
   render();el.onclick=e=>{const button=e.target.closest('button');if(!button)return;const next=get()+(button.textContent.trim()==='+'?1:-1);set(Math.max(min,Math.min(99,next)));render();};
 }
 function homePage(){ $('#feat').innerHTML=PRODUCTS.filter(p=>p.destacado).map(card).join(''); }
+
+// Animación táctil para móviles: respuesta inmediata al tocar cada producto.
+document.addEventListener('pointerdown',e=>{const card=e.target.closest('.product-card');if(card)card.classList.add('is-tapped');});
+['pointerup','pointercancel','pointerleave'].forEach(type=>document.addEventListener(type,e=>{const card=e.target.closest&&e.target.closest('.product-card');if(card)card.classList.remove('is-tapped');}));
 function catalogPage(){ $('#list').innerHTML=PRODUCTS.map(card).join('')||'<p>Próximamente añadiremos productos.</p>'; }
 function productPage() {
   const p=prod(new URLSearchParams(location.search).get('id')),mount=$('#pd');
