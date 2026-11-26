@@ -5,10 +5,10 @@
 <title>Mi perfil | BBR</title><meta name="description" content="Tu espacio personal en BBR.">
 <link rel="icon" href="logo.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261126-8">
+<link rel="stylesheet" href="styles.css?v=20261126-9">
 </head>
 <body data-page="profile">
-<header><div class="w header-inner"><a class="header-logo" href="index.html"><img src="logo.png" alt="BBR"></a><a class="cart" href="pedido.html">Mi pedido</a><a class="header-profile" href="perfil.html" aria-label="Mi perfil"><img id="profile-header-avatar" alt=""><span>Mi perfil</span></a></div></header>
+<header><div class="w header-inner"><a class="header-logo" href="index.html"><img src="logo.png" alt="BBR"></a><a class="cart" href="pedido.html">Mi pedido</a><a class="header-profile" href="perfil.html" aria-label="Mi perfil"><img id="profile-header-avatar" alt="Perfil"><span>Mi perfil</span></a></div></header>
 <main><div class="profile-hub">
 <div class="profile-graffiti g1" aria-hidden="true">BOLD</div><div class="profile-graffiti g2" aria-hidden="true">BBR</div><div class="profile-graffiti g3" aria-hidden="true">YOUR VIBE</div>
 <div class="profile-float f1" aria-hidden="true">✦ PREMIUM MEMBER</div><div class="profile-float f2" aria-hidden="true">🇬🇶 MADE FOR YOU</div><div class="profile-float f3" aria-hidden="true">STYLE · ENERGY · BBR</div><div class="profile-float f4" aria-hidden="true">✳</div>
@@ -26,29 +26,27 @@
 <a class="profile-back" href="index.html">← VOLVER A BBR</a>
 </div></main>
 <footer><div class="w"><p>© 2026 BBR™ · Soluciones inteligentes. Una vida mejor.</p></div></footer>
-<script type="module">
-import {initializeApp,getApps} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-import {getAuth,onAuthStateChanged,updateProfile,signOut} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
-const config={apiKey:"AIzaSyAY--0sITaphFA-KNcxmDflt8u3jdZkJ5g",authDomain:"bbr-shop-bb00f.firebaseapp.com",projectId:"bbr-shop-bb00f",storageBucket:"bbr-shop-bb00f.firebasestorage.app",messagingSenderId:"967839070632",appId:"1:967839070632:web:bc14902b6abb0f4922059d"};
-const app=getApps().length?getApps()[0]:initializeApp(config),auth=getAuth(app);
+<script>
 const $=id=>document.getElementById(id),status=$("hub-status");
-let currentUser=null;
-const key=uid=>"bbr_profile_photo_"+uid;
-function render(user){currentUser=user;$("profile-header-avatar").src=localStorage.getItem(key(user.uid))||user.photoURL||"";$("hub-name").textContent=user.displayName||"Cliente BBR";$("hub-email").textContent=user.email||"";$("new-name").value=user.displayName||"";$("hub-avatar").src=localStorage.getItem(key(user.uid))||user.photoURL||"https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png";}
-onAuthStateChanged(auth,user=>{if(!user||!user.emailVerified){location.replace("cuenta.html");return;}render(user);});
+const PHOTO_KEY="bbr_profile_photo", NAME_KEY="bbr_profile_name";
+const DEFAULT_AVATAR="data:image/svg+xml;charset=UTF-8,"+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" rx="50" fill="#e9eee9"/><circle cx="50" cy="37" r="18" fill="#87958b"/><path d="M15 94c2-22 16-34 35-34s33 12 35 34" fill="#87958b"/></svg>');
+function refresh(){const photo=localStorage.getItem(PHOTO_KEY)||DEFAULT_AVATAR; $("profile-header-avatar").src=photo;$("hub-avatar").src=photo;const name=localStorage.getItem(NAME_KEY)||"Tu perfil BBR";$("hub-name").textContent=name;$("new-name").value=name;}
+refresh();
 $("profile-gallery").addEventListener("change",e=>{
  const file=e.target.files&&e.target.files[0];if(!file)return;
  if(!file.type.startsWith("image/")){status.textContent="Elige un archivo de imagen.";return;}
+ if(file.size>8*1024*1024){status.textContent="La foto debe pesar menos de 8 MB.";return;}
  const reader=new FileReader();reader.onload=()=>{
   const img=new Image();img.onload=()=>{
    const size=420,canvas=document.createElement("canvas");canvas.width=size;canvas.height=size;
    const ctx=canvas.getContext("2d"),scale=Math.max(size/img.width,size/img.height),w=img.width*scale,h=img.height*scale;
    ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
-   try{const data=canvas.toDataURL("image/jpeg",.84);localStorage.setItem(key(currentUser.uid),data);$("hub-avatar").src=data;$("profile-header-avatar").src=data;status.textContent="¡Foto de perfil actualizada!";}catch(err){status.textContent="No hay espacio suficiente en este navegador. Prueba con otra foto.";}
+   try{const data=canvas.toDataURL("image/jpeg",.84);localStorage.setItem(PHOTO_KEY,data);refresh();status.textContent="¡Foto de perfil actualizada! Se verá en todas las secciones de esta web en este navegador.";}catch(err){status.textContent="No hay espacio suficiente en este navegador. Prueba con otra foto.";}
   };img.onerror=()=>status.textContent="No se pudo abrir esa imagen.";img.src=reader.result;
  };reader.readAsDataURL(file);
 });
-$("name-form").addEventListener("submit",async e=>{e.preventDefault();if(!currentUser)return;const name=$("new-name").value.trim();if(!name){status.textContent="Escribe un nombre.";return;}try{await updateProfile(currentUser,{displayName:name});$("hub-name").textContent=name;status.textContent="Nombre actualizado correctamente.";}catch(err){status.textContent="No se pudo actualizar el nombre. Inténtalo de nuevo.";}});
-$("hub-logout").onclick=async()=>{await signOut(auth);location.replace("cuenta.html");};
+$("name-form").addEventListener("submit",e=>{e.preventDefault();const name=$("new-name").value.trim();if(!name){status.textContent="Escribe un nombre.";return;}localStorage.setItem(NAME_KEY,name);refresh();status.textContent="Nombre de perfil guardado.";});
+$("hub-logout").textContent="VOLVER A BBR";
+$("hub-logout").onclick=()=>location.href="index.html";
 </script>
 </body></html>
