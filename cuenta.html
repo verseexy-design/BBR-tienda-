@@ -90,7 +90,7 @@ $("register-form").addEventListener("submit",async e=>{
 });
 $("login-form").addEventListener("submit",async e=>{
  e.preventDefault(); if(busy)return; busy=true;setBusy($("login-form"),true,"ENTRANDO…");showMessage("Iniciando sesión…");
- try { const credential=await signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value); if(!credential.user.emailVerified){await signOut(auth); showMessage("Tu correo todavía no está verificado. Busca el primer mensaje de Firebase en tu bandeja de entrada y también en Spam. Abre el enlace de verificación antes de iniciar sesión. No enviaremos otro enlace automáticamente para evitar bloqueos por demasiados intentos.","error"); return;} showMessage("Sesión iniciada correctamente.","success"); }
+ try { const credential=await signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value); if(!credential.user.emailVerified){await signOut(auth); showMessage("Tu correo todavía no está verificado. Busca el primer mensaje de Firebase en tu bandeja de entrada y también en Spam. Abre el enlace de verificación antes de iniciar sesión. No enviaremos otro enlace automáticamente para evitar bloqueos por demasiados intentos.","error"); return;} showMessage("Sesión iniciada correctamente. Abriendo tu perfil…","success"); location.href="perfil.html"; }
  catch(error){showMessage(friendlyError(error),"error");} finally {busy=false;setBusy($("login-form"),false);}
 });
 $("forgot-password").onclick=async()=>{
@@ -127,6 +127,8 @@ $("profile-photo").addEventListener("change",event=>{
 onAuthStateChanged(auth,user=>{
  if(user && !user.emailVerified){ signOut(auth); forms.classList.remove("account-hidden"); status.classList.add("account-hidden"); return; }
  if(user){
+  location.replace("perfil.html");
+  return;
   forms.classList.add("account-hidden");status.classList.remove("account-hidden");
   $("customer-name").textContent=user.displayName||user.email; renderAvatar(user);
   $("verify-note").textContent=user.emailVerified?"Tu correo electrónico está verificado.":"Aún debes verificar tu correo. Busca el mensaje de verificación que te enviamos.";
