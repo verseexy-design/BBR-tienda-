@@ -7,6 +7,14 @@ const PRODUCTS = [{
   stock: true,
   destacado: true,
   img: 'producto.jpg'
+}, {
+  id: 'repelente-electronico-ultrasonico',
+  nombre: 'Repelente Electrónico Ultrasónico de Insectos y Plagas',
+  desc: 'Dispositivo electrónico ultrasónico pensado para ayudar a mantener alejados insectos y roedores en espacios interiores. Se conecta a una toma de corriente. Los resultados pueden variar según el espacio y el tipo de plaga; no sustituye las medidas habituales de control de plagas.',
+  precio: 7000,
+  stock: true,
+  destacado: true,
+  img: 'https://media.adeo.com/mkp/3922a8d2db55aaf253f196e776a9971a/media.jpg?fit=bounds&format=jpg&height=800&quality=85&width=800'
 }];
 
 const fmt = n => `${Math.round(Number(n) || 0).toLocaleString('es-ES')} FCFA`;
