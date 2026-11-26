@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="styles.css?v=20261126-search1">
 </head>
 <body data-page="profile">
-<header><div class="w header-inner"><a class="header-logo" href="index.html"><img src="logo.png" alt="BBR"></a><a class="cart" href="pedido.html">Mi pedido</a><a class="header-profile" href="perfil.html" aria-label="Mi perfil"><img id="profile-header-avatar" alt="Perfil"><span>Mi perfil</span></a></div></header>
+<header><div class="w header-inner"><a class="header-logo" href="index.html"><img src="logo.png" alt="BBR"></a><button class="search-toggle" id="profile-search-toggle" type="button" aria-label="Buscar productos" aria-expanded="false" aria-controls="profile-search-panel"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"></circle><path d="m16 16 5 5"></path></svg></button><section class="bbr-search-panel" id="profile-search-panel" hidden aria-label="Buscar productos"><div class="bbr-search-top"><label for="profile-search-input">BUSCAR EN BBR</label><button class="bbr-search-close" id="profile-search-close" type="button" aria-label="Cerrar búsqueda">×</button></div><input id="profile-search-input" type="search" placeholder="¿Qué producto buscas?" autocomplete="off"><div class="bbr-search-results" id="profile-search-results" aria-live="polite"><p>Escribe para encontrar un producto.</p></div></section><a class="cart" href="pedido.html">Mi pedido</a><a class="header-profile" href="perfil.html" aria-label="Mi perfil"><img id="profile-header-avatar" alt="Perfil"><span>Mi perfil</span></a></div></header>
 <main><div class="profile-hub">
 <div class="profile-graffiti g1" aria-hidden="true">BOLD</div><div class="profile-graffiti g2" aria-hidden="true">BBR</div><div class="profile-graffiti g3" aria-hidden="true">YOUR VIBE</div>
 <div class="profile-float f1" aria-hidden="true">✦ PREMIUM MEMBER</div><div class="profile-float f2" aria-hidden="true">🇬🇶 MADE FOR YOU</div><div class="profile-float f3" aria-hidden="true">STYLE · ENERGY · BBR</div><div class="profile-float f4" aria-hidden="true">✳</div>
@@ -26,6 +26,21 @@
 <a class="profile-back" href="index.html">← VOLVER A BBR</a>
 </div></main>
 <footer><div class="w"><p>© 2026 BBR™ · Soluciones inteligentes. Una vida mejor.</p></div></footer>
+<script>
+(()=>{
+ const products=[
+  {id:"desodorante-lanemay",name:"Desodorante en barra Lanemay 40 g",price:"10.000 FCFA",img:"producto.jpg"},
+  {id:"repelente-electronico-ultrasonico",name:"Repelente Electrónico Ultrasónico de Insectos y Plagas",price:"7.000 FCFA",img:"https://media.adeo.com/mkp/3922a8d2db55aaf253f196e776a9971a/media.jpg?fit=bounds&format=jpg&height=800&quality=85&width=800"},
+  {id:"clip-antirronquidos-silicona",name:"Clip Nasal Antirronquidos Magnético de Silicona",price:"6.000 FCFA",img:"https://s.alicdn.com/@sc04/kf/Hac4924b5c7a746268f81cafca850053fh/Hot-Sale-Medical-Silicone-Magnetic-Anti-Snoring-Nose-Clip-Stopper-Anti-Snore-Device-Man-and-Woman.jpg"}
+ ];
+ const button=document.getElementById("profile-search-toggle"),panel=document.getElementById("profile-search-panel"),input=document.getElementById("profile-search-input"),results=document.getElementById("profile-search-results");
+ const close=()=>{panel.classList.remove("is-open");button.classList.remove("is-active");button.setAttribute("aria-expanded","false");setTimeout(()=>{if(!panel.classList.contains("is-open"))panel.hidden=true;},260);};
+ button.addEventListener("click",()=>{if(panel.hidden){panel.hidden=false;requestAnimationFrame(()=>panel.classList.add("is-open"));button.classList.add("is-active");button.setAttribute("aria-expanded","true");setTimeout(()=>input.focus(),100);}else close();});
+ document.getElementById("profile-search-close").addEventListener("click",close);
+ input.addEventListener("input",()=>{const q=input.value.trim().toLocaleLowerCase("es");if(!q){results.innerHTML="<p>Escribe para encontrar un producto.</p>";return;}const found=products.filter(p=>p.name.toLocaleLowerCase("es").includes(q));results.innerHTML=found.length?found.map(p=>'<a class="bbr-search-result" href="producto.html?id='+encodeURIComponent(p.id)+'"><img src="'+p.img+'" alt=""><span><b>'+p.name+'</b><small>'+p.price+'</small></span><i>↗</i></a>').join(""):"<p>No encontramos productos con ese nombre.</p>";});
+ document.addEventListener("keydown",e=>{if(e.key==="Escape")close();});
+})();
+</script>
 <script>
 const $=id=>document.getElementById(id),status=$("hub-status");
 const PHOTO_KEY="bbr_profile_photo", NAME_KEY="bbr_profile_name";
