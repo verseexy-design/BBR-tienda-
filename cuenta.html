@@ -6,12 +6,13 @@
 <link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=20261126-3">
+<link rel="stylesheet" href="styles.css?v=20261126-4">
 </head>
 <body data-page="account">
 <header id="hd"></header>
 <main><section><div class="w account-wrap">
-<div class="account-card">
+<div class="account-scene"><span class="tropical-palm palm-one" aria-hidden="true">🌴</span><span class="tropical-palm palm-two" aria-hidden="true">🌴</span><span class="float-badge badge-one">🇬🇶 GUINEA ECUATORIAL</span><span class="float-badge badge-two">✦ BBR DELIVERY</span><span class="float-badge badge-three">● COMPRA LOCAL</span><div class="account-card">
+<div class="account-emblem" aria-label="Guinea Ecuatorial"><span class="emblem-shield">🇬🇶</span><span>GUINEA<br>ECUATORIAL</span></div>
 <p class="eyebrow">ÁREA DE CLIENTES BBR</p>
 <div id="auth-forms">
 <div id="register-view">
@@ -19,7 +20,7 @@
 <form id="register-form">
 <label for="register-name">Nombre que se mostrará</label><input id="register-name" type="text" autocomplete="name" maxlength="60" required>
 <label for="register-email">Correo electrónico</label><input id="register-email" type="email" autocomplete="email" required>
-<label for="register-password">Contraseña</label><input id="register-password" type="password" autocomplete="new-password" minlength="6" required>
+<label for="register-password">Contraseña</label><div class="password-field"><input id="register-password" type="password" autocomplete="new-password" minlength="6" required><button class="password-toggle" type="button" data-target="register-password" aria-label="Mostrar contraseña">Mostrar</button></div>
 <button class="btn" type="submit">CREAR CUENTA</button>
 </form>
 <p class="account-switch">¿Ya tienes una cuenta en BBR? <button id="show-login" type="button">Pulsa aquí para iniciar sesión</button></p>
@@ -28,7 +29,7 @@
 <h1>Bienvenido de nuevo</h1><p class="account-sub">Inicia sesión en tu cuenta BBR.</p>
 <form id="login-form">
 <label for="login-email">Correo electrónico</label><input id="login-email" type="email" autocomplete="email" required>
-<label for="login-password">Contraseña</label><input id="login-password" type="password" autocomplete="current-password" required>
+<label for="login-password">Contraseña</label><div class="password-field"><input id="login-password" type="password" autocomplete="current-password" required><button class="password-toggle" type="button" data-target="login-password" aria-label="Mostrar contraseña">Mostrar</button></div>
 <button class="btn" type="submit">INICIAR SESIÓN</button>
 </form>
 <p class="account-switch"><button id="forgot-password" type="button">¿Has olvidado tu contraseña?</button></p>
@@ -42,7 +43,7 @@
 </div>
 <p id="account-message" class="account-message" role="status" aria-live="polite"></p>
 <p class="account-small">Tu cuenta utiliza Firebase Authentication para gestionar el acceso. Puedes explorar los productos y realizar pedidos sin registrarte.</p>
-</div>
+</div></div>
 </div></section></main>
 <footer id="ft"></footer>
 <script src="app.js?v=20261126-3"></script>
@@ -75,18 +76,19 @@ const friendlyError = error => ({
  "auth/operation-not-allowed":"El acceso por correo y contraseña aún no está habilitado en Firebase."
 }[error.code] || "No se pudo completar la operación. Revisa los datos e inténtalo de nuevo.");
 await setPersistence(auth,browserLocalPersistence);
+document.querySelectorAll(".password-toggle").forEach(button=>button.addEventListener("click",()=>{const input=$(button.dataset.target);const reveal=input.type==="password";input.type=reveal?"text":"password";button.textContent=reveal?"Ocultar":"Mostrar";button.setAttribute("aria-label",reveal?"Ocultar contraseña":"Mostrar contraseña");}));
 $("show-login").onclick=()=>{ $("register-view").classList.add("account-hidden"); $("login-view").classList.remove("account-hidden"); showMessage(""); };
 $("show-register").onclick=()=>{ $("login-view").classList.add("account-hidden"); $("register-view").classList.remove("account-hidden"); showMessage(""); };
 $("register-form").addEventListener("submit",async e=>{
  e.preventDefault(); const name=$("register-name").value.trim(),email=$("register-email").value.trim(),password=$("register-password").value;
  if(!name){showMessage("Escribe el nombre que quieres mostrar.","error");return;}
  showMessage("Creando tu cuenta…");
- try { const credential=await createUserWithEmailAndPassword(auth,email,password); await updateProfile(credential.user,{displayName:name}); await sendEmailVerification(credential.user); showMessage("Cuenta creada. Te hemos enviado un correo para verificar tu dirección. Revisa también la carpeta de spam.","success"); }
+ try { const credential=await createUserWithEmailAndPassword(auth,email,password); await updateProfile(credential.user,{displayName:name}); await sendEmailVerification(credential.user); await signOut(auth); $("register-form").reset(); $("register-view").classList.add("account-hidden"); $("login-view").classList.remove("account-hidden"); $("login-email").value=email; showMessage("Hemos creado la cuenta y enviado un enlace de verificación a "+email+". Para entrar en BBR, primero abre ese correo y confirma la dirección. Hasta verificarla no podrás iniciar sesión.","success"); }
  catch(error){showMessage(friendlyError(error),"error");}
 });
 $("login-form").addEventListener("submit",async e=>{
  e.preventDefault(); showMessage("Iniciando sesión…");
- try { await signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value); showMessage("Sesión iniciada correctamente.","success"); }
+ try { const credential=await signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value); if(!credential.user.emailVerified){await sendEmailVerification(credential.user); await signOut(auth); showMessage("Tu correo todavía no está verificado. Te acabamos de enviar otro enlace. Abre el mensaje y confirma tu dirección antes de entrar.","error"); return;} showMessage("Sesión iniciada correctamente.","success"); }
  catch(error){showMessage(friendlyError(error),"error");}
 });
 $("forgot-password").onclick=async()=>{
@@ -97,6 +99,7 @@ $("forgot-password").onclick=async()=>{
 };
 $("logout").onclick=async()=>{try{await signOut(auth);showMessage("Has cerrado sesión correctamente.","success");}catch(error){showMessage(friendlyError(error),"error");}};
 onAuthStateChanged(auth,user=>{
+ if(user && !user.emailVerified){ signOut(auth); forms.classList.remove("account-hidden"); status.classList.add("account-hidden"); return; }
  if(user){
   forms.classList.add("account-hidden");status.classList.remove("account-hidden");
   $("customer-name").textContent=user.displayName||user.email;
