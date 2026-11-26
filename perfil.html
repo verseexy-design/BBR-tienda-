@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mi perfil | BBR</title><meta name="description" content="Tu espacio personal en BBR.">
+<link rel="icon" href="logo.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=20261126-8">
+</head>
+<body data-page="profile">
+<header><div class="w header-inner"><a class="header-logo" href="index.html"><img src="logo.png" alt="BBR"></a><a class="cart" href="pedido.html">Mi pedido</a></div></header>
+<main><div class="profile-hub">
+<div class="profile-graffiti g1" aria-hidden="true">BOLD</div><div class="profile-graffiti g2" aria-hidden="true">BBR</div><div class="profile-graffiti g3" aria-hidden="true">YOUR VIBE</div>
+<div class="profile-float f1" aria-hidden="true">✦ PREMIUM MEMBER</div><div class="profile-float f2" aria-hidden="true">🇬🇶 MADE FOR YOU</div><div class="profile-float f3" aria-hidden="true">STYLE · ENERGY · BBR</div><div class="profile-float f4" aria-hidden="true">✳</div>
+<p class="profile-kicker">BATA · MALABO · GUINEA ECUATORIAL</p><h1 class="profile-title">TU ESPACIO <span>BBR</span></h1>
+<section class="profile-panel" aria-label="Datos de tu perfil">
+<div class="profile-panel-head">
+<label class="profile-photo-pick" for="profile-gallery" title="Elegir foto de la galería"><img id="hub-avatar" alt="Tu foto de perfil"><b>＋</b></label>
+<input id="profile-gallery" type="file" accept="image/*" hidden>
+<div class="profile-info"><p>PERFIL DE CLIENTE</p><h2 id="hub-name">Cargando perfil…</h2><p id="hub-email"></p><p>Pulsa tu foto para elegir cualquier imagen de tu galería.</p></div>
+</div>
+<form class="profile-edit" id="name-form"><input id="new-name" type="text" maxlength="60" placeholder="Cambiar nombre visible" aria-label="Nuevo nombre visible" required><button type="submit">GUARDAR NOMBRE</button></form>
+<div class="profile-actions"><a class="profile-button" href="catalogo.html">EXPLORAR PRODUCTOS</a><a class="profile-button secondary" href="pedido.html">MI PEDIDO</a><button class="profile-button secondary" id="hub-logout" type="button">CERRAR SESIÓN</button></div>
+<p class="profile-status" id="hub-status" role="status" aria-live="polite"></p>
+</section>
+<a class="profile-back" href="index.html">← VOLVER A BBR</a>
+</div></main>
+<footer><div class="w"><p>© 2026 BBR™ · Soluciones inteligentes. Una vida mejor.</p></div></footer>
+<script type="module">
+import {initializeApp,getApps} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import {getAuth,onAuthStateChanged,updateProfile,signOut} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+const config={apiKey:"AIzaSyAY--0sITaphFA-KNcxmDflt8u3jdZkJ5g",authDomain:"bbr-shop-bb00f.firebaseapp.com",projectId:"bbr-shop-bb00f",storageBucket:"bbr-shop-bb00f.firebasestorage.app",messagingSenderId:"967839070632",appId:"1:967839070632:web:bc14902b6abb0f4922059d"};
+const app=getApps().length?getApps()[0]:initializeApp(config),auth=getAuth(app);
+const $=id=>document.getElementById(id),status=$("hub-status");
+let currentUser=null;
+const key=uid=>"bbr_profile_photo_"+uid;
+function render(user){currentUser=user;$("hub-name").textContent=user.displayName||"Cliente BBR";$("hub-email").textContent=user.email||"";$("new-name").value=user.displayName||"";$("hub-avatar").src=localStorage.getItem(key(user.uid))||user.photoURL||"https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png";}
+onAuthStateChanged(auth,user=>{if(!user||!user.emailVerified){location.replace("cuenta.html");return;}render(user);});
+$("profile-gallery").addEventListener("change",e=>{
+ const file=e.target.files&&e.target.files[0];if(!file)return;
+ if(!file.type.startsWith("image/")){status.textContent="Elige un archivo de imagen.";return;}
+ const reader=new FileReader();reader.onload=()=>{
+  const img=new Image();img.onload=()=>{
+   const size=420,canvas=document.createElement("canvas");canvas.width=size;canvas.height=size;
+   const ctx=canvas.getContext("2d"),scale=Math.max(size/img.width,size/img.height),w=img.width*scale,h=img.height*scale;
+   ctx.drawImage(img,(size-w)/2,(size-h)/2,w,h);
+   try{const data=canvas.toDataURL("image/jpeg",.84);localStorage.setItem(key(currentUser.uid),data);$("hub-avatar").src=data;status.textContent="¡Foto de perfil actualizada!";}catch(err){status.textContent="No hay espacio suficiente en este navegador. Prueba con otra foto.";}
+  };img.onerror=()=>status.textContent="No se pudo abrir esa imagen.";img.src=reader.result;
+ };reader.readAsDataURL(file);
+});
+$("name-form").addEventListener("submit",async e=>{e.preventDefault();if(!currentUser)return;const name=$("new-name").value.trim();if(!name){status.textContent="Escribe un nombre.";return;}try{await updateProfile(currentUser,{displayName:name});$("hub-name").textContent=name;status.textContent="Nombre actualizado correctamente.";}catch(err){status.textContent="No se pudo actualizar el nombre. Inténtalo de nuevo.";}});
+$("hub-logout").onclick=async()=>{await signOut(auth);location.replace("cuenta.html");};
+</script>
+</body></html>
