@@ -52,7 +52,7 @@ function head() {
     <aside class="mobile-menu" id="bbr-menu" aria-label="Menú BBR" aria-hidden="true">
       <div class="menu-heading"><span>MENÚ BBR</span><button class="menu-close" type="button" aria-label="Cerrar menú">×</button></div>
       ${link('index.html','Inicio','home')}${link('catalogo.html','Productos','cat')}${link('pedido.html','Mi pedido','ped')}
-      <button class="login-preview" type="button">Iniciar sesión <span>PRÓXIMAMENTE</span></button>
+      <a class="login-preview" href="cuenta.html">Mi cuenta <span>REGISTRO / ACCESO</span></a>
     </aside>
   </div>`;
   const toggle=$('.menu-toggle'),menu=$('.mobile-menu'),backdrop=$('.menu-backdrop'),close=$('.menu-close');
@@ -60,8 +60,7 @@ function head() {
   toggle.onclick=()=>setOpen(!menu.classList.contains('is-open'));
   close.onclick=()=>setOpen(false);backdrop.onclick=()=>setOpen(false);
   document.addEventListener('keydown',e=>{if(e.key==='Escape')setOpen(false);});
-  const login=$('.login-preview');
-  login.onclick=()=>{login.classList.remove('login-pulse');void login.offsetWidth;login.classList.add('login-pulse');login.querySelector('span').textContent='MUY PRONTO';window.setTimeout(()=>login.classList.remove('login-pulse'),850);};
+
 }
 function foot() {
   $('#ft').innerHTML=`<div class="w footer-grid">
@@ -109,8 +108,8 @@ function orderPage() {
 }
 document.addEventListener('DOMContentLoaded',()=>{
   head();foot();trackBBRVisit();
-  const routes={home:homePage,cat:catalogPage,prod:productPage,ped:orderPage};
-  (routes[document.body.dataset.page]||homePage)();
+  const routes={home:homePage,cat:catalogPage,prod:productPage,ped:orderPage,account:()=>{}};
+  (routes[document.body.dataset.page]||(()=>{}))();
 
   const reveal=document.querySelector('.products-reveal');
   if(reveal && 'IntersectionObserver' in window){
