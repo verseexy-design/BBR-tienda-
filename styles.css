@@ -267,3 +267,17 @@ body[data-page="account"] .palm-two{animation-delay:-3s}
 body[data-page="account"] .account-card .btn:disabled{opacity:.72;cursor:wait;filter:saturate(.7)}
 @media(max-width:600px){body[data-page="account"] .account-scene{padding:39px 0 30px}body[data-page="account"] .account-card:after{font-size:7px;letter-spacing:.12em}.badge-three{right:-2px}}
 @media(prefers-reduced-motion:reduce){body[data-page="account"] .emblem-shield,body[data-page="account"] .badge-one,body[data-page="account"] .badge-two,body[data-page="account"] .badge-three,body[data-page="account"] .tropical-palm{animation:none!important}body[data-page="account"] .account-card .btn:before{display:none}}
+
+
+/* Perfil del cliente BBR */
+body[data-page="account"] .profile-top{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:12px}
+body[data-page="account"] .profile-top h1{margin:0 0 5px}
+body[data-page="account"] .profile-top .account-sub{margin:0}
+body[data-page="account"] .profile-avatar-control{position:relative;display:block;flex:0 0 88px;width:88px;height:88px;margin:0;cursor:pointer;border-radius:50%;padding:4px;background:linear-gradient(135deg,#28784f,#e1bd66,#d94a43);box-shadow:0 8px 22px rgba(24,73,53,.18);transition:transform .25s,box-shadow .25s}
+body[data-page="account"] .profile-avatar-control:hover{transform:translateY(-3px) scale(1.04);box-shadow:0 12px 28px rgba(24,73,53,.24)}
+body[data-page="account"] .profile-avatar-control img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;background:#e7efe8}
+body[data-page="account"] .profile-avatar-control span{position:absolute;right:-1px;bottom:0;width:27px;height:27px;border:3px solid white;border-radius:50%;display:grid;place-items:center;background:#17664f;color:#fff;font-size:19px;line-height:1}
+body[data-page="account"] .profile-hint{color:#84948a;font-size:11px;margin:8px 0 12px}
+body[data-page="account"] #customer-name{color:#17664f}
+body[data-page="ped"] #n[readonly]{background:#edf3ed;color:#17664f;border-color:#cddfd0;font-weight:700}
+@media(max-width:420px){body[data-page="account"] .profile-avatar-control{flex-basis:72px;width:72px;height:72px}}
