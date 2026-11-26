@@ -334,3 +334,24 @@ body[data-page="profile"] main:after{content:"✦  GLITCH CULTURE  ✦  BBR  ✦
 @keyframes profileDrift{0%,100%{translate:0 0;rotate:-3deg}50%{translate:0 -15px;rotate:3deg}}
 @media(max-width:600px){.profile-hub{padding:42px 13px 55px;min-height:620px}.profile-panel{padding:24px 17px;border-radius:20px}.profile-photo-pick{width:86px;height:86px;flex-basis:86px}.profile-info p{font-size:10px}.profile-float.f1{right:1%;top:20%}.profile-float.f2{left:0;top:53%}.profile-float.f3{right:0;bottom:10%}.profile-graffiti.g1{left:-7%}.profile-graffiti.g2{right:-8%}.profile-edit{flex-direction:column}.profile-edit button{min-height:42px}}
 @media(prefers-reduced-motion:reduce){.profile-float{animation:none!important}.profile-photo-pick,.profile-edit button,.profile-button{transition:none}}
+
+
+/* BBR product showcase: cards vibrantes, entrada escalonada y compartir */
+.product-card{position:relative;isolation:isolate;transform:translateY(0);transition:transform .55s cubic-bezier(.2,.75,.2,1),box-shadow .45s,border-color .35s;animation:productPop .75s cubic-bezier(.2,.8,.2,1) both}
+.product-card:nth-child(2){animation-delay:.09s}.product-card:nth-child(3){animation-delay:.18s}.product-card:nth-child(4){animation-delay:.27s}
+.product-card:before{content:"";position:absolute;z-index:2;inset:0 0 auto;height:3px;background:linear-gradient(90deg,#d4af37,#f5e4a3,#17664f,#d94a43);transform:scaleX(0);transform-origin:left;transition:transform .5s ease;pointer-events:none}
+.product-card:hover:before{transform:scaleX(1)}
+.product-card:hover{transform:translateY(-9px) scale(1.012);box-shadow:0 22px 48px rgba(0,0,0,.24)}
+.card-image-link{position:relative;overflow:hidden;background:linear-gradient(135deg,#f8f7f2,#e9e6dc)}
+.card-image-link img{transition:transform .75s cubic-bezier(.2,.75,.2,1),filter .5s}
+.product-card:hover .card-image-link img{transform:scale(1.07);filter:saturate(1.08)}
+.card-actions{display:flex;gap:8px;align-items:stretch;margin-top:8px}
+.card-actions .btn{flex:1;min-width:0}
+.share-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 13px;border:1px solid rgba(212,175,55,.65);border-radius:12px;background:linear-gradient(135deg,rgba(212,175,55,.13),rgba(23,102,79,.12));color:var(--o);font:800 11px Montserrat,sans-serif;cursor:pointer;transition:transform .25s,background .3s,border-color .3s,box-shadow .3s;white-space:nowrap}
+.share-btn:hover{transform:translateY(-2px);background:linear-gradient(110deg,rgba(212,175,55,.24),rgba(23,102,79,.22));border-color:var(--o);box-shadow:0 8px 20px rgba(212,175,55,.13)}
+.share-btn:active{transform:scale(.96)}
+.detail-share{min-height:46px}
+.featured-section .share-btn{color:#785b12;border-color:#c5a34b;background:linear-gradient(135deg,#fff8e6,#edf4ee)}
+@keyframes productPop{from{opacity:0;transform:translateY(25px) scale(.975);filter:blur(4px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
+@media(max-width:420px){.card-actions{flex-direction:column}.card-actions .btn,.card-actions .share-btn{width:100%;min-height:43px}}
+@media(prefers-reduced-motion:reduce){.product-card,.card-image-link img,.product-card:before,.share-btn{animation:none!important;transition:none!important}}
