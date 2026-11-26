@@ -63,7 +63,9 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const $ = id => document.getElementById(id);
 const forms = $("auth-forms"), status = $("account-status"), message = $("account-message");
-const showMessage = (text,kind="") => { message.textContent=text; message.className="account-message"+(kind?" "+kind:""); };\nlet busy = false;\nconst setBusy = (form,value,label) => { const button=form.querySelector('button[type="submit"]'); button.disabled=value; if(value){button.dataset.original=button.textContent;button.textContent=label;}else{button.textContent=button.dataset.original||button.textContent;} };
+const showMessage = (text,kind="") => { message.textContent=text; message.className="account-message"+(kind?" "+kind:""); };
+let busy = false;
+const setBusy = (form,value,label) => { const button=form.querySelector('button[type="submit"]'); button.disabled=value; if(value){button.dataset.original=button.textContent;button.textContent=label;}else{button.textContent=button.dataset.original||button.textContent;} };
 const friendlyError = error => ({
  "auth/email-already-in-use":"Ese correo ya tiene una cuenta. Inicia sesión.",
  "auth/invalid-email":"El correo electrónico no tiene un formato válido.",
@@ -82,14 +84,14 @@ $("show-register").onclick=()=>{ $("login-view").classList.add("account-hidden")
 $("register-form").addEventListener("submit",async e=>{
  e.preventDefault(); if(busy)return; const form=$("register-form"); const name=$("register-name").value.trim(),email=$("register-email").value.trim(),password=$("register-password").value;
  if(!name){showMessage("Escribe el nombre que quieres mostrar.","error");return;}
- showMessage("Creando tu cuenta…");
+ busy=true;setBusy($("register-form"),true,"CREANDO…");showMessage("Creando tu cuenta…");
  try { const credential=await createUserWithEmailAndPassword(auth,email,password); await updateProfile(credential.user,{displayName:name}); await sendEmailVerification(credential.user); await signOut(auth); $("register-form").reset(); $("register-view").classList.add("account-hidden"); $("login-view").classList.remove("account-hidden"); $("login-email").value=email; showMessage("Hemos creado la cuenta y enviado un enlace de verificación a "+email+". Para entrar en BBR, primero abre ese correo y confirma la dirección. Hasta verificarla no podrás iniciar sesión.","success"); }
- catch(error){showMessage(friendlyError(error),"error");}
+ catch(error){showMessage(friendlyError(error),"error");} finally {busy=false;setBusy($("register-form"),false);}
 });
 $("login-form").addEventListener("submit",async e=>{
- e.preventDefault(); showMessage("Iniciando sesión…");
- try { const credential=await signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value); if(!credential.user.emailVerified){await sendEmailVerification(credential.user); await signOut(auth); showMessage("Tu correo todavía no está verificado. Busca el primer mensaje de Firebase en tu bandeja de entrada y también en Spam. Abre el enlace de verificación antes de iniciar sesión. No enviaremos otro enlace automáticamente para evitar bloqueos por demasiados intentos.","error"); return;} showMessage("Sesión iniciada correctamente.","success"); }
- catch(error){showMessage(friendlyError(error),"error");}
+ e.preventDefault(); if(busy)return; busy=true;setBusy($("login-form"),true,"ENTRANDO…");showMessage("Iniciando sesión…");
+ try { const credential=await signInWithEmailAndPassword(auth,$("login-email").value.trim(),$("login-password").value); if(!credential.user.emailVerified){await signOut(auth); showMessage("Tu correo todavía no está verificado. Busca el primer mensaje de Firebase en tu bandeja de entrada y también en Spam. Abre el enlace de verificación antes de iniciar sesión. No enviaremos otro enlace automáticamente para evitar bloqueos por demasiados intentos.","error"); return;} showMessage("Sesión iniciada correctamente.","success"); }
+ catch(error){showMessage(friendlyError(error),"error");} finally {busy=false;setBusy($("login-form"),false);}
 });
 $("forgot-password").onclick=async()=>{
  const email=$("login-email").value.trim();
