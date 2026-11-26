@@ -81,7 +81,7 @@ function parseOrderEmail_(message) {
     const match = body.match(re);
     return match ? match[1].trim() : '';
   };
-  const amountText = field('IMPORTE DEL PEDIDO').replace(/[^0-9]/g,'');
+  const amountText = (field('IMPORTE DEL PEDIDO') || field('IMPORTE SOLICITADO')).replace(/[^0-9]/g,'');
   const quantity = Number(field('CANTIDAD')) || 0;
   return {
     id: field('CÓDIGO') || message.getId(),
@@ -127,7 +127,7 @@ function getStats_(pin, callback) {
 
 function output_(data, callback) {
   const json = JSON.stringify(data);
-  if (callback && /^[a-zA-Z_$][0-9a-zA-Z_$\\.]*$/.test(callback)) {
+  if (callback && /^[a-zA-Z_$][0-9a-zA-Z_$.]*$/.test(callback)) {
     return ContentService.createTextOutput(callback+'('+json+');').setMimeType(ContentService.MimeType.JAVASCRIPT);
   }
   return ContentService.createTextOutput(json).setMimeType(ContentService.MimeType.JSON);
