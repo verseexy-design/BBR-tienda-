@@ -17,12 +17,12 @@ const PRODUCTS = [{
   img: 'https://media.adeo.com/mkp/3922a8d2db55aaf253f196e776a9971a/media.jpg?fit=bounds&format=jpg&height=800&quality=85&width=800'
 }, {
   id: 'clip-antirronquidos-silicona',
-  nombre: 'Dispositivo Antirronquidos de Silicona con Clip Magnético Nasal',
+  nombre: 'Clip Nasal Antirronquidos Magnético de Silicona',
   desc: 'Clip nasal reutilizable de silicona con extremos magnéticos, diseñado como accesorio de apoyo para el descanso. Incluye una presentación compacta y fácil de guardar. La eficacia puede variar según la persona; no diagnostica ni trata la apnea del sueño.',
   precio: 6000,
   stock: true,
   destacado: true,
-  img: 'https://amd.deodap.com/cdn/shop/files/1_b9e7a0bf-4168-457b-aeab-ca4dc0513097_1024x1024.jpg?v=1742216034'
+  img: 'https://s.alicdn.com/@sc04/kf/Hac4924b5c7a746268f81cafca850053fh/Hot-Sale-Medical-Silicone-Magnetic-Anti-Snoring-Nose-Clip-Stopper-Anti-Snore-Device-Man-and-Woman.jpg'
 }];
 
 const fmt = n => `${Math.round(Number(n) || 0).toLocaleString('es-ES')} FCFA`;
