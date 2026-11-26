@@ -15,6 +15,14 @@ const PRODUCTS = [{
   stock: true,
   destacado: true,
   img: 'https://media.adeo.com/mkp/3922a8d2db55aaf253f196e776a9971a/media.jpg?fit=bounds&format=jpg&height=800&quality=85&width=800'
+}, {
+  id: 'clip-antirronquidos-silicona',
+  nombre: 'Clip Antirronquidos Magnético de Silicona',
+  desc: 'Clip nasal reutilizable de silicona con extremos magnéticos, diseñado como accesorio de apoyo para el descanso. Incluye una presentación compacta y fácil de guardar. La eficacia puede variar según la persona; no diagnostica ni trata la apnea del sueño.',
+  precio: 6000,
+  stock: true,
+  destacado: true,
+  img: 'https://amd.deodap.com/cdn/shop/files/1_b9e7a0bf-4168-457b-aeab-ca4dc0513097_1024x1024.jpg?v=1742216034'
 }];
 
 const fmt = n => `${Math.round(Number(n) || 0).toLocaleString('es-ES')} FCFA`;
@@ -85,8 +93,21 @@ function foot() {
   </div>`;
 }
 function card(p) {
-  return `<article class="card"><a href="producto.html?id=${encodeURIComponent(p.id)}" aria-label="Ver ${p.nombre}"><img src="${p.img}" alt="${p.nombre}" loading="lazy"></a><div><b>${p.nombre}</b><span class="price">${fmt(p.precio)}</span><span class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</span><a class="btn s" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a></div></article>`;
+  return `<article class="card product-card"><a class="card-image-link" href="producto.html?id=${encodeURIComponent(p.id)}" aria-label="Ver ${p.nombre}"><img src="${p.img}" alt="${p.nombre}" loading="lazy"></a><div><b>${p.nombre}</b><span class="price">${fmt(p.precio)}</span><span class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</span><div class="card-actions"><a class="btn s" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a><button class="share-btn" type="button" data-share="${p.id}" aria-label="Compartir ${p.nombre}" title="Compartir producto">↗ Compartir</button></div></div></article>`;
 }
+async function shareProduct(id,button) {
+  const p=prod(id); if(!p)return;
+  const url=new URL(`producto.html?id=${encodeURIComponent(id)}`,location.href).href;
+  const payload={title:p.nombre,text:`${p.nombre} · ${fmt(p.precio)} en BBR. Descúbrelo aquí:`,url};
+  try {
+    if(navigator.share){await navigator.share(payload);}
+    else if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(url);if(button){button.textContent='✓ Enlace copiado';setTimeout(()=>button.textContent='↗ Compartir',2200);}}
+    else {window.prompt('Copia el enlace del producto:',url);}
+  } catch(e) { if(e&&e.name!=='AbortError'){try{window.prompt('Copia el enlace del producto:',url);}catch(_){}} }
+}
+
+document.addEventListener('click',e=>{const b=e.target.closest('[data-share]');if(b){e.preventDefault();shareProduct(b.dataset.share,b);}});
+
 function qtyBox(el,get,set,min=1) {
   const render=()=>{el.innerHTML=`<button type="button" aria-label="Disminuir cantidad">−</button><span>${get()}</span><button type="button" aria-label="Aumentar cantidad">+</button>`;};
   render();el.onclick=e=>{const button=e.target.closest('button');if(!button)return;const next=get()+(button.textContent.trim()==='+'?1:-1);set(Math.max(min,Math.min(99,next)));render();};
@@ -97,7 +118,7 @@ function productPage() {
   const p=prod(new URLSearchParams(location.search).get('id')),mount=$('#pd');
   if(!p){mount.innerHTML='<p>Producto no encontrado. <a class="btn s" href="catalogo.html">Volver al catálogo</a></p>';return;}
   let q=1;
-  mount.innerHTML=`<div class="frame"><img src="${p.img}" alt="${p.nombre}"></div><div><h1 class="product-title">${p.nombre}</h1><p class="price">${fmt(p.precio)}</p><p class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</p><p class="lead product-desc">${p.desc}</p><p class="label-inline">Cantidad</p><div class="qty" id="q"></div><p class="tot" id="t"></p><div class="acts"><button class="btn s" id="a" ${p.stock?'':'disabled'}>Añadir al pedido</button><button class="btn" id="r" ${p.stock?'':'disabled'}>Continuar al pedido</button></div><p class="mut" id="m" role="status"></p></div>`;
+  mount.innerHTML=`<div class="frame"><img src="${p.img}" alt="${p.nombre}"></div><div><h1 class="product-title">${p.nombre}</h1><p class="price">${fmt(p.precio)}</p><p class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</p><p class="lead product-desc">${p.desc}</p><p class="label-inline">Cantidad</p><div class="qty" id="q"></div><p class="tot" id="t"></p><div class="acts"><button class="btn s" id="a" ${p.stock?'':'disabled'}>Añadir al pedido</button><button class="btn" id="r" ${p.stock?'':'disabled'}>Continuar al pedido</button><button class="share-btn detail-share" type="button" data-share="${p.id}">↗ Compartir producto</button></div><p class="mut" id="m" role="status"></p></div>`;
   const updateTotal=()=>{$('#t').textContent=`Subtotal: ${fmt(p.precio*q)}`;};
   qtyBox($('#q'),()=>q,v=>{q=v;updateTotal();});updateTotal();
   $('#a').onclick=()=>{add(p.id,q);$('#m').textContent='Producto añadido a tu pedido.';};
