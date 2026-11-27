@@ -464,3 +464,13 @@ body[data-page="profile"] main:after{content:"✦  GLITCH CULTURE  ✦  BBR  ✦
 .product-back-btn:hover span{transform:translateX(-3px)}
 @media(max-width:520px){.search-toggle{width:40px;height:40px;flex-basis:40px}.bbr-search-panel{left:0;width:min(470px,calc(100vw - 24px));padding:15px}.product-back-row{margin-bottom:14px}}
 @media(prefers-reduced-motion:reduce){.search-toggle,.search-toggle svg,.bbr-search-panel,.bbr-search-result,.product-back-btn,.product-back-btn span{transition:none!important;animation:none!important}}
+
+
+/* BBR: etiqueta roja de oferta y precio rebajado */
+.offer-badge{position:absolute;z-index:4;top:12px;right:12px;display:inline-flex;align-items:center;justify-content:center;padding:8px 12px;background:#d92f36;color:#fff;border-radius:5px;font:900 10px Montserrat,sans-serif;letter-spacing:.13em;box-shadow:0 5px 15px rgba(150,15,25,.25)}
+.price-line{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.price-line del{color:#9b9b9b;font-size:13px;font-weight:700}
+.price-line .price{color:#d92f36;font-size:21px}
+.detail-price-wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
+.detail-price-wrap .offer-badge{position:static}
+.featured-section .price-line .price{color:#d92f36}
