@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+<title id="title">BBR, tu tienda online en Guinea Ecuatorial</title>
+<desc id="desc">Ilustración de jóvenes guineanos usando un móvil para descubrir productos en la tienda online BBR.</desc>
+<defs>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#08090d"/><stop offset=".55" stop-color="#171a22"/><stop offset="1" stop-color="#050506"/></linearGradient>
+ <linearGradient id="gold" x2="1" y2="1"><stop stop-color="#ffe58b"/><stop offset=".48" stop-color="#d4af37"/><stop offset="1" stop-color="#9d7416"/></linearGradient>
+ <linearGradient id="screen" x2="0" y2="1"><stop stop-color="#242631"/><stop offset="1" stop-color="#08090d"/></linearGradient>
+ <filter id="glow"><feGaussianBlur stdDeviation="15"/></filter>
+ <pattern id="dots" width="34" height="34" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.5" fill="#d4af37" opacity=".23"/></pattern>
+</defs>
+<rect width="1200" height="900" fill="url(#bg)"/><rect width="1200" height="900" fill="url(#dots)"/>
+<circle cx="600" cy="470" r="410" fill="#d4af37" opacity=".09" filter="url(#glow)"/>
+<path d="M0 700 Q260 610 470 760 T1200 700 V900 H0Z" fill="#0b0c10"/>
+<path d="M70 730 Q380 500 650 710 T1140 650" fill="none" stroke="#d4af37" stroke-width="5" opacity=".55"/>
+<!-- city silhouettes -->
+<g fill="#242630" opacity=".8"><path d="M0 500h90v240H0zm110-90h80v330h-80zm100 60h110v270H210zm720-30h90v300h-90zm110-100h80v400h-80zm100 150h80v250h-80z"/><path d="M0 500l45-45 45 45m20-90 40-50 40 50m650 80 45-50 45 50m20-100 40-50 40 50" fill="none" stroke="#d4af37" stroke-width="3" opacity=".35"/></g>
+<!-- left young woman -->
+<g>
+ <path d="M65 720 Q90 530 245 520 Q390 520 425 760Z" fill="#17191f" stroke="#d4af37" stroke-width="3"/>
+ <path d="M150 535 Q125 455 165 365 Q205 285 300 320 Q370 355 350 470 L335 560Z" fill="#171217"/>
+ <ellipse cx="255" cy="415" rx="92" ry="112" fill="#75432f"/>
+ <path d="M164 414 Q130 280 235 270 Q350 250 355 385 Q315 320 265 325 Q210 330 164 414Z" fill="#171116"/>
+ <path d="M190 420q20-14 38 0m55 0q20-14 38 0" fill="none" stroke="#24120e" stroke-width="7" stroke-linecap="round"/>
+ <path d="M242 480q28 25 58 0" fill="none" stroke="#f5c4a6" stroke-width="6" stroke-linecap="round"/>
+ <circle cx="178" cy="478" r="11" fill="#d4af37"/><circle cx="337" cy="478" r="11" fill="#d4af37"/>
+ <path d="M195 570l55 45 60-45" fill="none" stroke="#d4af37" stroke-width="5"/>
+ <text x="250" y="680" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" font-weight="900" fill="#f5f5f5">BBR</text>
+</g>
+<!-- right young man -->
+<g>
+ <path d="M790 740 Q815 500 970 500 Q1135 500 1170 740Z" fill="#17191f" stroke="#d4af37" stroke-width="3"/>
+ <ellipse cx="980" cy="405" rx="100" ry="118" fill="#814a32"/>
+ <path d="M875 400 Q850 260 970 250 Q1090 245 1085 400 Q1030 330 980 330 Q925 330 875 400Z" fill="#101014"/>
+ <path d="M915 414q22-13 42 0m50 0q22-13 42 0" fill="none" stroke="#24120e" stroke-width="7" stroke-linecap="round"/>
+ <path d="M962 480q30 22 60-2" fill="none" stroke="#f5c4a6" stroke-width="6" stroke-linecap="round"/>
+ <path d="M920 565l60 45 60-45" fill="none" stroke="#d4af37" stroke-width="5"/>
+ <text x="980" y="685" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" font-weight="900" fill="#f5f5f5">BBR</text>
+</g>
+<!-- central young shopper -->
+<g>
+ <path d="M350 900 Q365 590 580 560 Q800 560 840 900Z" fill="#101116" stroke="#d4af37" stroke-width="4"/>
+ <path d="M450 360 Q430 220 590 210 Q755 210 740 380 L715 510 465 510Z" fill="#161117"/>
+ <ellipse cx="590" cy="390" rx="126" ry="148" fill="#8a5037"/>
+ <path d="M465 370 Q445 220 575 205 Q720 190 730 350 Q665 285 595 295 Q520 300 465 370Z" fill="#111015"/>
+ <path d="M505 400q26-16 51 0m75 0q26-16 51 0" fill="none" stroke="#25130f" stroke-width="9" stroke-linecap="round"/>
+ <path d="M555 475q40 38 82 0" fill="none" stroke="#f6c4a5" stroke-width="9" stroke-linecap="round"/>
+ <path d="M500 540l90 65 90-65" fill="none" stroke="#d4af37" stroke-width="7"/>
+ <text x="590" y="800" text-anchor="middle" font-family="Arial,sans-serif" font-size="42" font-weight="900" fill="#f5f5f5">BBR</text>
+</g>
+<!-- phone -->
+<g transform="rotate(-7 600 650)">
+ <rect x="475" y="500" width="250" height="380" rx="38" fill="#050507" stroke="url(#gold)" stroke-width="9"/>
+ <rect x="493" y="526" width="214" height="332" rx="23" fill="url(#screen)"/>
+ <rect x="555" y="510" width="90" height="10" rx="5" fill="#555"/>
+ <text x="600" y="590" text-anchor="middle" font-family="Arial,sans-serif" font-size="40" font-weight="900" fill="#f5f5f5">BB<tspan fill="#d4af37">R</tspan></text>
+ <rect x="515" y="615" width="170" height="38" rx="18" fill="#fff"/><circle cx="536" cy="634" r="8" fill="none" stroke="#171717" stroke-width="3"/><path d="M542 640l8 8" stroke="#171717" stroke-width="3"/><path d="M562 634h95" stroke="#888" stroke-width="5" stroke-linecap="round"/>
+ <g><rect x="515" y="675" width="75" height="78" rx="10" fill="#f2eee5"/><rect x="610" y="675" width="75" height="78" rx="10" fill="#f2eee5"/><rect x="515" y="765" width="75" height="68" rx="10" fill="#f2eee5"/><rect x="610" y="765" width="75" height="68" rx="10" fill="#f2eee5"/>
+ <path d="M535 727l18-35 18 35zm95-4h35v-28h-35zM536 812l18-30 18 30zm93 0l18-30 18 30z" fill="#d4af37"/></g>
+</g>
+<!-- top messaging -->
+<rect x="54" y="48" width="1092" height="105" rx="24" fill="#090a0e" stroke="#d4af37" stroke-width="2"/>
+<text x="95" y="93" font-family="Arial,sans-serif" font-size="27" font-weight="800" letter-spacing="5" fill="#d4af37">DROPSHIPPING EN GUINEA ECUATORIAL 🇬🇶</text>
+<text x="95" y="132" font-family="Arial,sans-serif" font-size="48" font-weight="900" fill="#fff">COMPRA FÁCIL. DESDE TU MÓVIL.</text>
+<rect x="760" y="760" width="355" height="82" rx="41" fill="url(#gold)"/>
+<text x="937" y="813" text-anchor="middle" font-family="Arial,sans-serif" font-size="30" font-weight="900" fill="#111">SOLUCIONES INTELIGENTES</text>
+</svg>
