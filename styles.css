@@ -474,3 +474,46 @@ body[data-page="profile"] main:after{content:"✦  GLITCH CULTURE  ✦  BBR  ✦
 .detail-price-wrap{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:10px 0}
 .detail-price-wrap .offer-badge{position:static}
 .featured-section .price-line .price{color:#d92f36}
+
+
+/* BBR product detail refresh: ficha compacta, visual y orientada a compra */
+body[data-page="prod"] main>section{padding:28px 0 52px;background:radial-gradient(ellipse at 12% 8%,rgba(212,175,55,.10),transparent 34%),linear-gradient(145deg,#f6f5ef,#e9eee8)}
+body[data-page="prod"] #pd{display:grid;grid-template-columns:1fr;gap:14px;align-items:start}
+body[data-page="prod"] .product-back-row{grid-column:1/-1;margin:0 0 3px}
+.product-layout{display:grid;grid-template-columns:minmax(0,1.04fr) minmax(0,.96fr);gap:clamp(18px,3vw,34px);align-items:start}
+.product-info{min-width:0;padding:clamp(18px,2.8vw,30px);border:1px solid #e1ddcf;border-radius:18px;background:rgba(255,255,255,.94);box-shadow:0 18px 45px rgba(24,34,26,.09);color:#171a17}
+.product-kicker{font:900 9px Montserrat,sans-serif;letter-spacing:.2em;color:#92721e;margin-bottom:10px}
+body[data-page="prod"] .product-title{font-size:clamp(23px,3.2vw,36px);line-height:1.12;letter-spacing:-.045em;color:#171a17;margin:0 0 12px}
+body[data-page="prod"] .detail-price-wrap{margin:12px 0 8px}
+body[data-page="prod"] .detail-price-wrap .price{font-size:clamp(25px,3vw,34px);font-weight:900}
+.product-stock{font:800 10px Montserrat,sans-serif;letter-spacing:.08em;margin:9px 0 15px}
+.product-stock.ok{color:#247b50}.product-stock.no{color:#c53238}
+.product-desc{font-size:13px;line-height:1.75;color:#62685f;margin:0 0 17px}
+.product-buy-panel{padding:15px;border-radius:13px;background:linear-gradient(135deg,#f7f5ec,#edf3ed);border:1px solid #e2ddcc}
+.product-quantity-row{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;font-weight:800;color:#31382f}
+.product-quantity-row .qty{background:#fff;border:1px solid #e1ddcf;border-radius:10px;padding:3px}
+.product-quantity-row .qty button{width:34px;height:34px;color:#735b1a;border-color:#d6c58e}
+body[data-page="prod"] .tot{margin:12px 0 13px;font-size:17px;color:#171a17}
+.product-buy-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.product-buy-actions .btn{min-height:47px;display:flex;align-items:center;justify-content:center;text-align:center;border-radius:9px;font-size:10px;line-height:1.35;padding:10px}
+.product-buy-actions .btn.s{background:#fff;color:#1d3829;border:1px solid #b9c9bc}
+.product-buy-actions .btn:not(.s){background:linear-gradient(110deg,#171a17,#303a30);color:#fff;border:1px solid #d4af37}
+.product-buy-actions .btn:disabled{opacity:.4;cursor:not-allowed}
+.product-info .detail-share{margin-top:13px;width:100%;min-height:42px;background:#fff;color:#6d571a;border-color:#e1d4aa}
+.product-info .mut{font-size:11px;line-height:1.5;margin:9px 0 0}
+body[data-page="prod"] .bbr-gallery,body[data-page="prod"] .product-layout>.frame{position:relative;top:auto;align-self:start;max-width:none;border-radius:18px;padding:10px;background:#fff;border:1px solid #e1ddcf;box-shadow:0 18px 45px rgba(24,34,26,.09)}
+body[data-page="prod"] .bbr-gallery-slide{aspect-ratio:1.12/1}
+body[data-page="prod"] .product-layout>.frame img{width:100%;max-height:560px;object-fit:contain;display:block}
+@media(max-width:700px){
+ body[data-page="prod"] main>section{padding:17px 0 35px}
+ .product-layout{grid-template-columns:minmax(0,1fr);gap:12px}
+ body[data-page="prod"] .bbr-gallery,body[data-page="prod"] .product-layout>.frame{padding:7px;border-radius:13px}
+ body[data-page="prod"] .bbr-gallery-slide{aspect-ratio:1.35/1}
+ .product-info{padding:17px;border-radius:14px}
+ body[data-page="prod"] .product-title{font-size:24px}
+ .product-desc{font-size:12px;line-height:1.6;margin-bottom:12px}
+ .product-buy-panel{padding:12px}
+ .product-buy-actions{grid-template-columns:1fr 1fr}
+}
+@media(max-width:370px){.product-buy-actions{grid-template-columns:1fr}.product-buy-actions .btn{min-height:43px}}
+@media(prefers-reduced-motion:reduce){.product-info,.product-buy-actions .btn{transition:none!important}}
