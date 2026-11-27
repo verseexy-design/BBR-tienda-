@@ -1,43 +1,24 @@
-/* BBR - tienda y seguimiento anónimo de visitas */
 const PRODUCTS = [{
-  id: 'desodorante-lanemay',
-  nombre: 'Desodorante en barra Lanemay 40 g',
-  desc: 'Desodorante en barra para piel sensible, sin aluminio y sin gluten. Formato de 40 g, fácil de llevar a todas partes.',
-  precio: 10000,
-  stock: true,
-  destacado: true,
-  img: 'producto.jpg'
-}, {
-  id: 'repelente-electronico-ultrasonico',
-  nombre: 'Repelente Electrónico Ultrasónico de Insectos y Plagas',
-  desc: 'Dispositivo electrónico ultrasónico pensado para ayudar a mantener alejados insectos y roedores en espacios interiores. Se conecta a una toma de corriente. Los resultados pueden variar según el espacio y el tipo de plaga; no sustituye las medidas habituales de control de plagas.',
-  precio: 7000,
-  stock: true,
-  destacado: true,
-  img: 'https://media.adeo.com/mkp/3922a8d2db55aaf253f196e776a9971a/media.jpg?fit=bounds&format=jpg&height=800&quality=85&width=800'
-}, {
   id: 'clip-antirronquidos-silicona',
   nombre: 'Clip Nasal Antirronquidos Magnético de Silicona',
   desc: 'Clip nasal reutilizable de silicona con extremos magnéticos, diseñado como accesorio de apoyo para el descanso. Incluye una presentación compacta y fácil de guardar. La eficacia puede variar según la persona; no diagnostica ni trata la apnea del sueño.',
-  precio: 6000,
-  stock: true,
-  destacado: true,
+  precio: 10000, precioAnterior: 20000, oferta: true, stock: true, destacado: true,
   img: 'https://s.alicdn.com/@sc04/kf/Hac4924b5c7a746268f81cafca850053fh/Hot-Sale-Medical-Silicone-Magnetic-Anti-Snoring-Nose-Clip-Stopper-Anti-Snore-Device-Man-and-Woman.jpg'
 }, {
-  id: 'pasta-dental-herbal-menta',
-  nombre: 'Pasta Dental Violeta Blanqueadora con Menta',
+  id: 'desodorante-lanemay', nombre: 'Desodorante en barra Lanemay 40 g',
+  desc: 'Desodorante en barra para piel sensible, sin aluminio y sin gluten. Formato de 40 g, fácil de llevar a todas partes.',
+  precio: 10000, stock: false, destacado: false, img: 'producto.jpg'
+}, {
+  id: 'repelente-electronico-ultrasonico', nombre: 'Repelente Electrónico Ultrasónico de Insectos y Plagas',
+  desc: 'Dispositivo electrónico ultrasónico pensado para ayudar a mantener alejados insectos y roedores en espacios interiores. Se conecta a una toma de corriente. Los resultados pueden variar según el espacio y el tipo de plaga; no sustituye las medidas habituales de control de plagas.',
+  precio: 7000, stock: false, destacado: false,
+  img: 'https://media.adeo.com/mkp/3922a8d2db55aaf253f196e776a9971a/media.jpg?fit=bounds&format=jpg&height=800&quality=85&width=800'
+}, {
+  id: 'pasta-dental-herbal-menta', nombre: 'Pasta Dental Violeta Blanqueadora con Menta',
   desc: 'Pasta dental de referencia con fórmula violeta y sabor a menta fresca, inspirada en los dentífricos correctores de tono. Las imágenes de envase y comparativas son ilustrativas de productos similares de otras marcas, no del artículo exacto del proveedor. Las fotos de resultados son material promocional de terceros y no garantizan resultados; las pastas violetas suelen producir un efecto óptico temporal al neutralizar visualmente tonos amarillos.',
-  precio: 10000,
-  stock: true,
-  destacado: true,
+  precio: 10000, stock: false, destacado: false,
   img: 'https://perforacare.com/cdn/shop/files/Purple-Magic-Toothpaste_Listing_Image-1_pack-of-2.jpg?v=1777535890&width=1080',
-  images: [
-    'https://perforacare.com/cdn/shop/files/Purple-Magic-Toothpaste_Listing_Image-1_pack-of-2.jpg?v=1777535890&width=1080',
-    'https://uoyou.co.uk/cdn/shop/products/51UR6aOYc-L.jpg?v=1707347711&width=720',
-    'https://m.media-amazon.com/images/I/61jAjxY%2BuDL._SL1500_.jpg',
-    'https://cdn.shopify.com/s/files/1/0727/4820/4308/files/BaspariTeethColorCorrector_07_1024x1024.jpg?v=1684586050',
-    'https://perforacare.com/cdn/shop/files/Purple-Magic-Toothpaste_Listing_Image-3.jpg?v=1777465283&width=1080'
-  ]
+  images: ['https://perforacare.com/cdn/shop/files/Purple-Magic-Toothpaste_Listing_Image-1_pack-of-2.jpg?v=1777535890&width=1080','https://uoyou.co.uk/cdn/shop/products/51UR6aOYc-L.jpg?v=1707347711&width=720','https://m.media-amazon.com/images/I/61jAjxY%2BuDL._SL1500_.jpg','https://cdn.shopify.com/s/files/1/0727/4820/4308/files/BaspariTeethColorCorrector_07_1024x1024.jpg?v=1684586050','https://perforacare.com/cdn/shop/files/Purple-Magic-Toothpaste_Listing_Image-3.jpg?v=1777465283&width=1080']
 }];
 
 const fmt = n => `${Math.round(Number(n) || 0).toLocaleString('es-ES')} FCFA`;
@@ -131,8 +112,10 @@ function foot() {
   </div>`;
 }
 function card(p) {
-  const accent = p.id==='desodorante-lanemay' ? '#D4AF37' : p.id==='repelente-electronico-ultrasonico' ? '#42B883' : '#E16B91';
-  return `<article class="card product-card" data-product="${p.id}" style="--product-accent:${accent}"><a class="card-image-link" href="producto.html?id=${encodeURIComponent(p.id)}" aria-label="Ver ${p.nombre}"><img src="${p.img}" alt="${p.nombre}" loading="lazy"></a><div><b>${p.nombre}</b><span class="price">${fmt(p.precio)}</span><span class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'Agotado'}</span><div class="card-actions"><a class="btn s" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a><button class="share-btn" type="button" data-share="${p.id}" aria-label="Compartir ${p.nombre}" title="Compartir producto">↗ Compartir</button></div></div></article>`;
+  const accent = p.id==='clip-antirronquidos-silicona' ? '#D84A43' : '#D4AF37';
+  const offer = p.oferta ? '<span class="offer-badge">OFERTA</span>' : '';
+  const prices = p.precioAnterior ? '<span class="price-line"><del>'+fmt(p.precioAnterior)+'</del><strong class="price">'+fmt(p.precio)+'</strong></span>' : '<span class="price">'+fmt(p.precio)+'</span>';
+  return `<article class="card product-card" data-product="${p.id}" style="--product-accent:${accent}"><a class="card-image-link" href="producto.html?id=${encodeURIComponent(p.id)}" aria-label="Ver ${p.nombre}">${offer}<img src="${p.img}" alt="${p.nombre}" loading="lazy"></a><div><b>${p.nombre}</b>${prices}<span class="${p.stock?'ok':'no'}">${p.stock?'Disponible':'AGOTADO'}</span><div class="card-actions"><a class="btn s" href="producto.html?id=${encodeURIComponent(p.id)}">Ver producto</a><button class="share-btn" type="button" data-share="${p.id}" aria-label="Compartir ${p.nombre}" title="Compartir producto">↗ Compartir</button></div></div></article>`;
 }
 async function shareProduct(id,button) {
   const p=prod(id); if(!p)return;
