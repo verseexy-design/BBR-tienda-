@@ -108,6 +108,7 @@ function foot() {
       <a href="https://www.tiktok.com/@tudoctor.tv" target="_blank" rel="noopener noreferrer" title="TikTok" aria-label="TikTok BBR"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3v11.2a4.1 4.1 0 1 1-3.5-4.05V6.6a7.5 7.5 0 1 0 7 7.45V9.8a9 9 0 0 0 4 1V7.2c-3.2-.1-5.8-1.8-7.5-4.2z"></path></svg></a>
       </div></div>
     <div class="footer-legal"><p>Privacidad: utilizamos los datos facilitados únicamente para gestionar tu solicitud, contactar contigo y coordinar el pedido y su entrega. No envíes información personal que no sea necesaria.</p><p>Información de compra: los precios se muestran en FCFA. La disponibilidad y las condiciones de entrega se confirman antes de coordinar el envío.</p><p class="copyright">© ${new Date().getFullYear()} BBR™ · Todos los derechos reservados.</p></div>
+    <div class="footer-share"><span class="footer-share-kicker">COMPARTE BBR</span><strong>Una buena solución merece ser compartida.</strong><p>Invita a tus amigos y familiares a descubrir nuestra tienda online.</p><button class="footer-share-btn" type="button" data-share-site>↗ Compartir página web</button><small>Soluciones inteligentes. Una vida mejor. 🇬🇶</small></div>
     <div class="footer-founder"><span>Fundador</span><strong>Gabriel Bueriberi</strong></div>
   </div>`;
 }
@@ -128,7 +129,7 @@ async function shareProduct(id,button) {
   } catch(e) { if(e&&e.name!=='AbortError'){try{window.prompt('Copia el enlace del producto:',url);}catch(_){}} }
 }
 
-document.addEventListener('click',e=>{const b=e.target.closest('[data-share]');if(b){e.preventDefault();shareProduct(b.dataset.share,b);}});
+document.addEventListener('click',async e=>{const productButton=e.target.closest('[data-share]');if(productButton){e.preventDefault();shareProduct(productButton.dataset.share,productButton);return;}const siteButton=e.target.closest('[data-share-site]');if(siteButton){const url=new URL('index.html',location.href).href;const payload={title:'BBR · Soluciones inteligentes',text:'Descubre BBR, una tienda online con productos prácticos en Guinea Ecuatorial.',url};const original=siteButton.textContent;try{if(navigator.share){await navigator.share(payload);}else if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(url);siteButton.textContent='✓ Enlace copiado';setTimeout(()=>siteButton.textContent=original,2400);}else{window.prompt('Copia el enlace de la tienda BBR:',url);}}catch(err){if(err&&err.name!=='AbortError'){try{window.prompt('Copia el enlace de la tienda BBR:',url);}catch(_){}}}}});
 
 function qtyBox(el,get,set,min=1) {
   const render=()=>{el.innerHTML=`<button type="button" aria-label="Disminuir cantidad">−</button><span>${get()}</span><button type="button" aria-label="Aumentar cantidad">+</button>`;};
@@ -161,7 +162,7 @@ function orderPage() {
     const cart=getCart();
     if(!cart.length){lines.innerHTML='<p>Tu pedido está vacío.</p><a class="btn" href="catalogo.html">Explorar productos</a>';form.hidden=true;return;}
     form.hidden=false;
-    lines.innerHTML=cart.map(item=>{const p=prod(item.id);return `<div class="line"><div><b>${p.nombre}</b><br><span class="mut">${fmt(p.precio)} × ${item.q}</span></div><div class="qty" data-id="${p.id}"></div><b>${fmt(p.precio*item.q)}</b><button class="remove" type="button" data-remove="${p.id}">Eliminar</button></div>`;}).join('')+`<p class="tot">Total: ${fmt(total())}</p>`;
+    lines.innerHTML=cart.map(item=>{const p=prod(item.id);const accent=p.id==='clip-antirronquidos-silicona'?'#D84A43':'#D4AF37';return `<div class="line bbr-cart-pill" data-cart-item="${p.id}" style="--cart-accent:${accent}"><div class="cart-pill-product"><b>${p.nombre}</b><span class="mut">${fmt(p.precio)} × ${item.q}</span></div><div class="qty" data-id="${p.id}"></div><b class="cart-pill-price">${fmt(p.precio*item.q)}</b><button class="remove" type="button" data-remove="${p.id}">Eliminar</button></div>`;}).join('')+`<p class="tot">Total: ${fmt(total())}</p>`;
     lines.querySelectorAll('.qty').forEach(el=>{const id=el.dataset.id;qtyBox(el,()=>getCart().find(x=>x.id===id)?.q||1,value=>{setCart(getCart().map(x=>x.id===id?{...x,q:value}:x));draw();});});
     lines.querySelectorAll('[data-remove]').forEach(btn=>btn.onclick=()=>{setCart(getCart().filter(x=>x.id!==btn.dataset.remove));draw();});
   };
