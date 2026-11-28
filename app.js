@@ -138,8 +138,8 @@ function qtyBox(el,get,set,min=1) {
 function homePage(){ $('#feat').innerHTML=PRODUCTS.filter(p=>p.destacado).map(card).join(''); }
 
 // Animación táctil para móviles: respuesta inmediata al tocar cada producto.
-document.addEventListener('pointerdown',e=>{const card=e.target.closest('.product-card');if(card)card.classList.add('is-tapped');});
-['pointerup','pointercancel','pointerleave'].forEach(type=>document.addEventListener(type,e=>{const card=e.target.closest&&e.target.closest('.product-card');if(card)card.classList.remove('is-tapped');}));
+document.addEventListener('pointerdown',e=>{const card=e.target.closest('.product-card');if(card)card.classList.add('is-tapped');const cartItem=e.target.closest('.bbr-cart-pill');if(cartItem)cartItem.classList.add('is-touched');});
+['pointerup','pointercancel','pointerleave'].forEach(type=>document.addEventListener(type,e=>{const card=e.target.closest&&e.target.closest('.product-card');if(card)card.classList.remove('is-tapped');const cartItem=e.target.closest&&e.target.closest('.bbr-cart-pill');if(cartItem)cartItem.classList.remove('is-touched');}));
 function catalogPage(){ $('#list').innerHTML=PRODUCTS.map(card).join('')||'<p>Próximamente añadiremos productos.</p>'; }
 function productPage() {
   const p=prod(new URLSearchParams(location.search).get('id')),mount=$('#pd');
