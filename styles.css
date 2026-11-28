@@ -517,3 +517,42 @@ body[data-page="prod"] .product-layout>.frame img{width:100%;max-height:560px;ob
 }
 @media(max-width:370px){.product-buy-actions{grid-template-columns:1fr}.product-buy-actions .btn{min-height:43px}}
 @media(prefers-reduced-motion:reduce){.product-info,.product-buy-actions .btn{transition:none!important}}
+
+
+/* BBR footer share: invitación elegante para compartir la tienda */
+.footer-share{grid-column:1/-1;position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px 24px;margin:12px 0 4px;padding:clamp(20px,3vw,30px);border:1px solid rgba(212,175,55,.62);border-radius:18px;background:radial-gradient(circle at 88% 18%,rgba(212,175,55,.18),transparent 34%),linear-gradient(120deg,#171916,#25271f 65%,#171916);color:#fff;box-shadow:0 16px 38px rgba(0,0,0,.13)}
+.footer-share:before{content:"";position:absolute;z-index:-1;inset:7px;border:1px solid rgba(255,255,255,.09);border-radius:12px;pointer-events:none}
+.footer-share-kicker{grid-column:1/-1;color:#e2c66f;font:900 9px Montserrat,sans-serif;letter-spacing:.24em}
+.footer-share>strong{font:800 clamp(17px,2.6vw,25px)/1.2 Montserrat,sans-serif;letter-spacing:-.04em}
+.footer-share>p{grid-column:1;color:#d1d2c9;font-size:11px;line-height:1.7;margin:0;max-width:560px}
+.footer-share-btn{grid-column:2;grid-row:2/4;min-height:48px;padding:0 22px;border:1px solid #e0c15d;border-radius:9px;background:linear-gradient(110deg,#f3df9b,#c9a43e);color:#171711;font:900 10px Montserrat,sans-serif;letter-spacing:.08em;cursor:pointer;box-shadow:0 8px 22px rgba(212,175,55,.18);transition:transform .25s,box-shadow .25s,filter .25s}
+.footer-share-btn:hover,.footer-share-btn:focus-visible{transform:translateY(-3px);box-shadow:0 13px 28px rgba(212,175,55,.3);filter:brightness(1.06)}
+.footer-share-btn:active{transform:scale(.97)}
+.footer-share>small{grid-column:1/-1;color:#bdb9a8;font-size:9px;letter-spacing:.08em;margin-top:5px}
+
+/* Carrito BBR: artículos en cápsulas horizontales blanco y dorado */
+#lines{display:grid;gap:13px;align-items:stretch}
+#lines .bbr-cart-pill{position:relative;display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;align-items:center;gap:clamp(9px,2vw,18px);min-width:0;margin:0;padding:13px 17px;border:1px solid rgba(190,155,57,.58);border-radius:25px;background:linear-gradient(110deg,#fff 0%,#fffefa 58%,#fbf6e7 100%);color:#20221d;box-shadow:0 7px 20px rgba(24,30,22,.055),inset 0 1px 0 rgba(255,255,255,.95);transition:border-color .25s,box-shadow .28s,transform .28s,background .28s}
+#lines .bbr-cart-pill:before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(115deg,rgba(212,175,55,.12),var(--cart-accent,#d4af37),rgba(255,255,255,.9),#d4af37);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:.55;pointer-events:none;transition:opacity .25s,filter .25s}
+#lines .bbr-cart-pill:active,#lines .bbr-cart-pill.is-touched{transform:translateY(-2px);border-color:var(--cart-accent,#d4af37);background:linear-gradient(110deg,#fff,#fffdf5);box-shadow:0 0 0 3px rgba(212,175,55,.13),0 0 22px rgba(212,175,55,.24),0 12px 26px rgba(24,30,22,.09)}
+#lines .bbr-cart-pill:active:before,#lines .bbr-cart-pill.is-touched:before{opacity:1;filter:drop-shadow(0 0 5px var(--cart-accent,#d4af37))}
+.cart-pill-product{display:grid;gap:5px;min-width:0}
+.cart-pill-product>b{font-size:12px;line-height:1.4;color:#22251f}
+.cart-pill-product .mut{font-size:10px;color:#77766e}
+#lines .cart-pill-price{white-space:nowrap;color:#92721e;font-size:12px;font-weight:900}
+#lines .bbr-cart-pill .qty{display:flex;align-items:center;gap:3px;padding:3px;border:1px solid #e8dfc5;border-radius:999px;background:#fff}
+#lines .bbr-cart-pill .qty button{width:28px;height:28px;border:0;border-radius:50%;background:#f5f0df;color:#725817;font-weight:900}
+#lines .bbr-cart-pill .qty span{min-width:18px;text-align:center;font-size:11px;font-weight:800}
+#lines .bbr-cart-pill .remove{min-height:31px;padding:0 10px;border:1px solid #eadfce;border-radius:999px;background:#fff;color:#a0443e;font-size:9px;font-weight:800;cursor:pointer;transition:background .2s,border-color .2s}
+#lines .bbr-cart-pill .remove:hover{background:#fff2ef;border-color:#d9a49c}
+@media(max-width:600px){
+ .footer-share{grid-template-columns:minmax(0,1fr);gap:10px;padding:20px 17px}
+ .footer-share-kicker,.footer-share>strong,.footer-share>p,.footer-share-btn,.footer-share>small{grid-column:1;grid-row:auto}
+ .footer-share-btn{width:100%;margin-top:3px}
+ #lines .bbr-cart-pill{grid-template-columns:minmax(0,1fr) auto;gap:9px 12px;padding:13px 14px;border-radius:22px}
+ #lines .cart-pill-product{grid-column:1/-1}
+ #lines .bbr-cart-pill .qty{grid-column:1;justify-self:start}
+ #lines .cart-pill-price{grid-column:2;grid-row:2;justify-self:end}
+ #lines .bbr-cart-pill .remove{grid-column:1/-1;justify-self:end}
+}
+@media(prefers-reduced-motion:reduce){.footer-share-btn,#lines .bbr-cart-pill,#lines .bbr-cart-pill:before,#lines .bbr-cart-pill .remove{transition:none!important}}
